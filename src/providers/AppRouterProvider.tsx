@@ -10,7 +10,7 @@ import { AuthContext } from "./AuthProvider";
 
 const authenticatedRouter = createBrowserRouter([
   {
-    path: "/",
+    path: "/:id",
     element: <HomePage />,
     children: [
       {
@@ -18,12 +18,15 @@ const authenticatedRouter = createBrowserRouter([
         element: <div>Hello nested route</div>,
       },
       {
-        path: "/subroute",
+        path: "subroute/:category",
         element: <div>this is a subroute</div>,
       },
     ],
   },
-  { path: "/login", element: <Navigate to="/" /> },
+  {
+    path: "/login",
+    element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
+  },
 ]);
 const anonymousRouter = createBrowserRouter([
   {

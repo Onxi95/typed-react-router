@@ -13,12 +13,14 @@ export const HomePage: React.FC = () => {
         <ul>
           <li>
             <MuiLink>
-              <Link to="/">root (/)</Link>
+              <Link to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff">
+                root (/7bd3a823-e6dd-4ea2-9612-f6defe315cff)
+              </Link>
             </MuiLink>
           </li>
           <li>
             <MuiLink>
-              <Link to="/subroute">subroute (/subroute)</Link>
+              <Link to="subroute/graphics">subroute (subroute/graphics)</Link>
             </MuiLink>
           </li>
         </ul>
