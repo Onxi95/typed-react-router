@@ -12,6 +12,16 @@ const authenticatedRouter = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
+    children: [
+      {
+        index: true,
+        element: <div>Hello nested route</div>,
+      },
+      {
+        path: "/subroute",
+        element: <div>this is a subroute</div>,
+      },
+    ],
   },
   { path: "/login", element: <Navigate to="/" /> },
 ]);
