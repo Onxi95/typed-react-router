@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { HomePage } from "../pages/HomePage";
 import { LoginPage } from "../pages/LoginPage";
+import { SubroutePage } from "../pages/SubroutePage";
 import { AuthContext } from "./AuthProvider";
 
 const authenticatedRouter = createBrowserRouter([
@@ -19,7 +20,7 @@ const authenticatedRouter = createBrowserRouter([
       },
       {
         path: "subroute/:category",
-        element: <div>this is a subroute</div>,
+        element: <SubroutePage />,
       },
     ],
   },
