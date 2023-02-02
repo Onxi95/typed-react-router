@@ -1,6 +1,6 @@
 import { Link as MuiLink, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, Outlet, useParams, useSearchParams } from "react-router-dom";
 import { AppLayout } from "../layouts/AppLayout";
 
 type RouteParams = {
@@ -10,6 +10,7 @@ type RouteParams = {
 
 export const HomePage: React.FC = () => {
   const { id, category } = useParams<RouteParams>();
+  const [searchParams, setSearchParams] = useSearchParams();
   return (
     <AppLayout>
       <Typography variant="h4" component="h1" textAlign="center" marginTop={5}>
@@ -19,6 +20,9 @@ export const HomePage: React.FC = () => {
         <Box>
           <Typography variant="body1">id: {id}</Typography>
           <Typography variant="body1">category: {category}</Typography>
+          <Typography variant="body1">
+            order: {searchParams.get("order")}
+          </Typography>
         </Box>
         <ul>
           <li>
@@ -31,6 +35,13 @@ export const HomePage: React.FC = () => {
           <li>
             <MuiLink>
               <Link to="subroute/graphics">subroute (subroute/graphics)</Link>
+            </MuiLink>
+          </li>
+          <li>
+            <MuiLink>
+              <Link to="subroute/graphics?order=15">
+                subroute (subroute/graphics?order=15)
+              </Link>
             </MuiLink>
           </li>
         </ul>
