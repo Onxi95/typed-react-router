@@ -4,7 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
+import ForkRightIcon from "@mui/icons-material/ForkRight";
 import React from "react";
 
 type AppLayoutProps = { children: React.ReactNode };
@@ -21,10 +21,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <ForkRightIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
+            Świetny router
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
