@@ -7,15 +7,15 @@ type AuthContext = {
 }
 
 export const AuthContext = createContext<AuthContext>({
-    isAuthenticated: false,
-    setIsAuthenticated: () => {throw new Error("not implemented");},
+  isAuthenticated: false,
+  setIsAuthenticated: () => {throw new Error("not implemented");},
     
 });
 
 export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    return <AuthContext.Provider value={{isAuthenticated, setIsAuthenticated}}>
-        {children}
-    </AuthContext.Provider>;
+  return <AuthContext.Provider value={{isAuthenticated, setIsAuthenticated}}>
+    {children}
+  </AuthContext.Provider>;
 }; 
