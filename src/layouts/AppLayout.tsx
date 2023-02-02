@@ -5,11 +5,13 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import ForkRightIcon from "@mui/icons-material/ForkRight";
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../providers/AuthProvider";
 
 type AppLayoutProps = { children: React.ReactNode };
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
+  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -26,7 +28,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Świetny router
           </Typography>
-          <Button color="inherit">Login</Button>
+          {isAuthenticated && (
+            <Button color="inherit" onClick={() => setIsAuthenticated(false)}>
+              Logout
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
       {children}
