@@ -1,15 +1,25 @@
 import { Link as MuiLink, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import { AppLayout } from "../layouts/AppLayout";
 
+type RouteParams = {
+  id: string;
+  category: string;
+};
+
 export const HomePage: React.FC = () => {
+  const { id, category } = useParams<RouteParams>();
   return (
     <AppLayout>
       <Typography variant="h4" component="h1" textAlign="center" marginTop={5}>
         Authenticated page
       </Typography>
       <Box display="flex" alignItems="center" flexDirection="column" gap={2}>
+        <Box>
+          <Typography variant="body1">id: {id}</Typography>
+          <Typography variant="body1">category: {category}</Typography>
+        </Box>
         <ul>
           <li>
             <MuiLink>
