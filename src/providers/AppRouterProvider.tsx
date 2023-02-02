@@ -1,16 +1,21 @@
-import {
-    createBrowserRouter,
-    RouterProvider,
-} from "react-router-dom";
+import { useContext } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { AuthContext } from "./AuthProvider";
 
-const router = createBrowserRouter([
+const authenticatedRouter = createBrowserRouter([
     {
         path: "/",
-        element: <div>Hello world!</div>,
+        element: <div>Authenticated router</div>,
+    },
+]);
+const anonymousRouter = createBrowserRouter([
+    {
+        path: "/",
+        element: <div>Anonymous router</div>,
     },
 ]);
 
 export const AppRouterProvider = () => {
-    return  <RouterProvider router={router} />;
+    const { isAuthenticated } = useContext(AuthContext);
+    return <RouterProvider router={isAuthenticated ? authenticatedRouter : anonymousRouter} />;
 };
-        
