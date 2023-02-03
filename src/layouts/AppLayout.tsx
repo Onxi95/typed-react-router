@@ -7,11 +7,13 @@ import IconButton from "@mui/material/IconButton";
 import ForkRightIcon from "@mui/icons-material/ForkRight";
 import React, { useContext } from "react";
 import { AuthContext } from "../providers/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 type AppLayoutProps = { children: React.ReactNode };
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -29,7 +31,13 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             Świetny router
           </Typography>
           {isAuthenticated && (
-            <Button color="inherit" onClick={() => setIsAuthenticated(false)}>
+            <Button
+              color="inherit"
+              onClick={() => {
+                setIsAuthenticated(false);
+                navigate("/login");
+              }}
+            >
               Logout
             </Button>
           )}
