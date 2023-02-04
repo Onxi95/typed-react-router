@@ -92,7 +92,7 @@ const authenticatedRouter = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
+    path: "/",
     element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
   },
 ]);
@@ -102,7 +102,7 @@ const anonymousRouter = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-    path: "/",
+    path: "/*",
     element: <Navigate to="/login" />,
   },
 ]);
