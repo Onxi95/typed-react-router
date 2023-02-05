@@ -18,7 +18,10 @@ type RouteType = {
 
 type GetChildrenNames<T> = T extends { children?: infer ChildrenType }
   ? ChildrenType extends ReadonlyArray<RouteType>
-    ? ChildrenType[number]["name"]
+    ? // wip: add support to recursively nested instances:
+      // ? ChildrenType[number]["name"] | GetChildrenNames<T>
+      // TS Error: Type instantiation is excessively deep and possibly infinite.ts(2589)
+      ChildrenType[number]["name"]
     : never
   : never;
 
