@@ -38,7 +38,8 @@ function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   ) => {
     return routerConfig.reduce((acc, current) => {
       const routeName = current.name as GetRouteNames<T[number]>;
-      acc[routeName] = { ...current, path: `${parentPath}/${current.path}` };
+      const rootPath = parentPath ? `${parentPath}/` : "";
+      acc[routeName] = { ...current, path: `${rootPath}${current.path}` };
       if (current.children) {
         acc = { ...acc, ...parseNestedRoutes(current.children, current.path) };
       }
