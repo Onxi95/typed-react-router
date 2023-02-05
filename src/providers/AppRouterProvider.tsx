@@ -39,7 +39,7 @@ function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   };
 }
 
-const test = [
+const authenticatedRouter = createTypedBrowserRouter([
   {
     name: "home",
     path: "/:id",
@@ -62,9 +62,7 @@ const test = [
     path: "/",
     element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
   },
-] as const;
-
-const authenticatedRouter = createTypedBrowserRouter(test);
+] as const);
 
 authenticatedRouter.buildUrl("authenticatedPassthrough");
 
@@ -79,9 +77,7 @@ const anonymousRouter = createTypedBrowserRouter([
     path: "/*",
     element: <Navigate to="/login" />,
   },
-]);
-
-type test = Uncapitalize<"HelloWorld">;
+] as const);
 
 export const AppRouterProvider = () => {
   const { isAuthenticated } = useContext(AuthContext);
