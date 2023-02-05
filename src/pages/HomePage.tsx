@@ -26,23 +26,17 @@ export const HomePage: React.FC = () => {
         </Box>
         <ul>
           <li>
-            <MuiLink>
-              <Link to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff">
-                root (/7bd3a823-e6dd-4ea2-9612-f6defe315cff)
-              </Link>
-            </MuiLink>
+            <Link to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff">
+              root (/7bd3a823-e6dd-4ea2-9612-f6defe315cff)
+            </Link>
           </li>
           <li>
-            <MuiLink>
-              <Link to="subroute/graphics">subroute (subroute/graphics)</Link>
-            </MuiLink>
+            <Link to="subroute/graphics">subroute (subroute/graphics)</Link>
           </li>
           <li>
-            <MuiLink>
-              <Link to="subroute/graphics?order=15">
-                subroute (subroute/graphics?order=15)
-              </Link>
-            </MuiLink>
+            <Link to="subroute/graphics?order=15">
+              subroute (subroute/graphics?order=15)
+            </Link>
           </li>
         </ul>
         <Outlet />
