@@ -16,13 +16,54 @@ type RouteType = {
   children?: ReadonlyArray<RouteType>;
 };
 
-const test = {
-  path: "/home/:id",
-  children: [{ path: ":subroute/:id" }, { path: ":secondSubroute/:category" }],
-} as const;
+// type InferPath<T extends ReadonlyArray<RouteType>> =
+//   `${T[number]["path"]}${T[number] extends { children?: infer ChildrenType }
+//     ? ChildrenType extends ReadonlyArray<RouteType>
+//       ? `/${ChildrenType[number]["path"]}`
+//       : never
+//     : ""}`;
 
-type InferPath =
-  `${typeof test["path"]}/${typeof test["children"][number]["path"]}`;
+const authenticatedRoutes = [
+  {
+    name: "home",
+    path: "/:id",
+    element: <HomePage />,
+    children: [
+      {
+        name: "nestedRoute",
+        path: "",
+        element: <div>Hello nested route</div>,
+      },
+      {
+        name: "subRoute",
+        path: "subroute/:category",
+        element: <SubroutePage />,
+      },
+    ],
+  },
+  {
+    name: "authenticatedPassthrough",
+    path: "/",
+    element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
+  },
+] as const;
+
+type InferPath<T extends RouteType> = `${T["path"]}${T extends {
+  children?: infer ChildrenType;
+}
+  ? ChildrenType extends ReadonlyArray<RouteType>
+    ? `${ChildrenType[number]["path"]}`
+    : ""
+  : ""}`;
+
+function inferPath<T extends ReadonlyArray<RouteType>>(routerConfig: T) {
+  type Paths = InferPath<T[number]>;
+  return routerConfig as unknown as Paths;
+}
+
+const resultType = inferPath(authenticatedRoutes);
+
+// type Test1 = InferPath<typeof authenticatedRoutes>;
 
 type GetChildrenNames<T> = T extends { children?: infer ChildrenType }
   ? ChildrenType extends ReadonlyArray<RouteType>
@@ -67,30 +108,7 @@ function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   };
 }
 
-const authenticatedRouter = createTypedBrowserRouter([
-  {
-    name: "home",
-    path: "/:id",
-    element: <HomePage />,
-    children: [
-      {
-        name: "nestedRoute",
-        path: "",
-        element: <div>Hello nested route</div>,
-      },
-      {
-        name: "subRoute",
-        path: "subroute/:category",
-        element: <SubroutePage />,
-      },
-    ],
-  },
-  {
-    name: "authenticatedPassthrough",
-    path: "/",
-    element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
-  },
-] as const);
+const authenticatedRouter = createTypedBrowserRouter(authenticatedRoutes);
 
 console.log(authenticatedRouter.buildUrl("home"));
 
