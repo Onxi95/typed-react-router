@@ -32,8 +32,24 @@ type GetRouteNames<T> = T extends RouteType
 function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   routerConfig: T
 ) {
+  const parseNestedRoutes = (
+    routerConfig: ReadonlyArray<RouteType>,
+    parentPath = ""
+  ) => {
+    return routerConfig.reduce((acc, current) => {
+      const routeName = current.name as GetRouteNames<T[number]>;
+      acc[routeName] = { ...current, path: `${parentPath}/${current.path}` };
+      if (current.children) {
+        acc = { ...acc, ...parseNestedRoutes(current.children, current.path) };
+      }
+      return acc;
+    }, {} as Record<GetRouteNames<T[number]>, RouteType>);
+  };
+
+  const flattenedRoutes = parseNestedRoutes(routerConfig);
+
   const buildUrl = (urlName: GetRouteNames<T[number]>) => {
-    return urlName;
+    return flattenedRoutes[urlName];
   };
 
   return {
@@ -67,7 +83,7 @@ const authenticatedRouter = createTypedBrowserRouter([
   },
 ] as const);
 
-authenticatedRouter.buildUrl("authenticatedPassthrough");
+authenticatedRouter.buildUrl("home");
 
 const anonymousRouter = createTypedBrowserRouter([
   {
