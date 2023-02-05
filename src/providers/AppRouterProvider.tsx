@@ -13,44 +13,12 @@ type RouteType = {
   name: string;
   path?: string;
   element: JSX.Element;
-  children?: RouteType[];
+  children?: ReadonlyArray<RouteType>;
 };
 
-const test = [
-  {
-    name: "home" as const,
-    path: "/:id",
-    element: <HomePage />,
-    children: [
-      {
-        name: "nestedRoute" as const,
-        path: "",
-        element: <div>Hello nested route</div>,
-      },
-      {
-        name: "subRoute" as const,
-        path: "subroute/:category",
-        element: <SubroutePage />,
-        children: [
-          {
-            name: "doubleNestedRoute" as const,
-            path: "/doubleNestedRoute",
-            element: <div>Double nested route</div>,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: "loginPassThrough" as const,
-    path: "/login",
-    element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
-  },
-] satisfies RouteType[];
-
 type GetChildrenNames<T> = T extends { children?: infer ChildrenType }
-  ? ChildrenType extends RouteType[]
-    ? ChildrenType[number]["name"] | GetChildrenNames<ChildrenType[number]>
+  ? ChildrenType extends ReadonlyArray<RouteType>
+    ? ChildrenType[number]["name"]
     : never
   : never;
 
@@ -58,15 +26,20 @@ type GetRouteNames<T> = T extends RouteType
   ? T["name"] | GetChildrenNames<T>
   : never;
 
-type Test1 = GetRouteNames<typeof test[number]>;
+function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
+  routerConfig: T
+) {
+  const buildUrl = (urlName: GetRouteNames<T[number]>) => {
+    return urlName;
+  };
 
-function createTypedBrowserRouter(routerConfig: RouteType[]) {
   return {
-    router: createBrowserRouter(routerConfig),
+    router: createBrowserRouter(routerConfig as any),
+    buildUrl,
   };
 }
 
-const authenticatedRouter = createTypedBrowserRouter([
+const test = [
   {
     name: "home",
     path: "/:id",
@@ -89,7 +62,12 @@ const authenticatedRouter = createTypedBrowserRouter([
     path: "/",
     element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
   },
-]);
+] as const;
+
+const authenticatedRouter = createTypedBrowserRouter(test);
+
+authenticatedRouter.buildUrl("authenticatedPassthrough");
+
 const anonymousRouter = createTypedBrowserRouter([
   {
     name: "login",
