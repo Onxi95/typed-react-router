@@ -16,6 +16,14 @@ type RouteType = {
   children?: ReadonlyArray<RouteType>;
 };
 
+const test = {
+  path: "/home/:id",
+  children: [{ path: ":subroute/:id" }, { path: ":secondSubroute/:category" }],
+} as const;
+
+type InferPath =
+  `${typeof test["path"]}/${typeof test["children"][number]["path"]}`;
+
 type GetChildrenNames<T> = T extends { children?: infer ChildrenType }
   ? ChildrenType extends ReadonlyArray<RouteType>
     ? // wip: add support to recursively nested instances:
