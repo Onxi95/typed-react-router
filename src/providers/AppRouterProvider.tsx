@@ -55,7 +55,12 @@ type GetChildrenNames<T> = T extends { children?: infer ChildrenType }
     : never
   : never;
 
+type GetRouteNames<T> = T extends RouteType
+  ? T["name"] | GetChildrenNames<T>
+  : never;
+
 type Test1 = GetChildrenNames<typeof test[number]>;
+type Test2 = GetRouteNames<typeof test[number]>;
 type InferNames<T extends ReadonlyArray<RouteType>> = T;
 
 const authenticatedRouter = createBrowserRouter([
