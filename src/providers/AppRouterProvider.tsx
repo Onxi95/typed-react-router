@@ -32,6 +32,13 @@ const test = [
         name: "subRoute" as const,
         path: "subroute/:category",
         element: <SubroutePage />,
+        children: [
+          {
+            name: "doubleNestedRoute" as const,
+            path: "/doubleNestedRoute",
+            element: <div>Double nested route</div>,
+          },
+        ],
       },
     ],
   },
@@ -40,13 +47,15 @@ const test = [
     path: "/login",
     element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
   },
-];
+] satisfies RouteType[];
 
-type Test1 = typeof test[number] extends { children?: infer ChildrenType }
+type GetChildrenNames<T> = T extends { children?: infer ChildrenType }
   ? ChildrenType extends RouteType[]
-    ? ChildrenType[number]["name"]
+    ? ChildrenType[number]["name"] | GetChildrenNames<ChildrenType[number]>
     : never
   : never;
+
+type Test1 = GetChildrenNames<typeof test[number]>;
 type InferNames<T extends ReadonlyArray<RouteType>> = T;
 
 const authenticatedRouter = createBrowserRouter([
