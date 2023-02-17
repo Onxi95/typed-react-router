@@ -1,29 +1,31 @@
 import { createBrowserRouter } from "react-router-dom";
-import { GetRouteNames,  InferPath,  RouteType } from "./types";
+import { GetInferedRoutes, RouteType } from "./types";
 
 export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   routerConfig: T
 ) {
-  const parseNestedRoutes = (
+  const parseNestedRoutes = <U extends GetInferedRoutes<T[number]>>(
     routerConfig: ReadonlyArray<RouteType>,
     parentPath = ""
   ) => {
     return routerConfig.reduce((acc, current) => {
-      const routeName = current.name as GetRouteNames<T[number]>;
+      const routeName = current.name as U["name"];
       const rootPath = parentPath ? `${parentPath}/` : "";
-      acc[routeName] = `${rootPath}${current.path}`;
+      acc[routeName] = `${rootPath}${current.path}` as U["path"];
       if (current.children) {
         acc = { ...acc, ...parseNestedRoutes(current.children, current.path) };
       }
       return acc;
-    }, {} as Record<GetRouteNames<T[number]>, string>);
+    }, {} as Record<U["name"], U["path"]>);
   };
 
   const flattenedRoutes = parseNestedRoutes(routerConfig);
 
-  const buildUrl = (urlName: GetRouteNames<T[number]>) => {
-    const t = flattenedRoutes[urlName] as unknown as InferPath<T[number]>;
-    return t;
+  console.log(flattenedRoutes, "flattenedRoutes");
+
+
+  const buildUrl = <U extends GetInferedRoutes<T[number]>>(urlName: U["name"]): U["path"] => {
+    return flattenedRoutes[urlName];
   };
 
   return {
