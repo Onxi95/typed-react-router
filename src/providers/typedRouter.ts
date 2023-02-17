@@ -24,7 +24,7 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   console.log(flattenedRoutes, "flattenedRoutes");
 
 
-  const buildUrl = <U extends GetInferedRoutes<T[number]>>(urlName: U["name"]): U["path"] => {
+  const buildUrl = (urlName: GetInferedRoutes<T[number]>["name"]): string=> {
     return flattenedRoutes[urlName];
   };
 
