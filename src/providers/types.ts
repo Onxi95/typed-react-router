@@ -1,6 +1,6 @@
 export type RouteType = {
     name: string;
-    path?: string;
+    path: string;
     element: JSX.Element;
     children?: ReadonlyArray<RouteType>;
 };
@@ -41,4 +41,12 @@ export type GetInferedRoutes<T, Path extends string = ""> = T extends RouteType
         : never, InferPath<T>
     >
     : never
+
+
+type ArrayToObject<T extends ReadonlyArray<RouteType>> = {
+    [K in T[number]["name"]]: Extract<T[number], { name: K }>["path"]
+};
+
+export type GetInferedRoutes2<T extends ReadonlyArray<RouteType>> =
+    ArrayToObject<T>
 

@@ -5,7 +5,7 @@ import { LoginPage } from "../pages/LoginPage";
 import { SubroutePage } from "../pages/SubroutePage";
 import { AuthContext } from "./AuthProvider";
 import { createTypedBrowserRouter } from "./typedRouter";
-import { GetInferedRoutes } from "./types";
+import { GetInferedRoutes, GetInferedRoutes2 } from "./types";
 
 const authenticatedPaths = [
   {
@@ -51,6 +51,7 @@ const result = authenticatedRouter.buildUrl("subRoute");
 console.log(result);
 
 type test1 = GetInferedRoutes<typeof authenticatedPaths[number]>;
+type test2 = GetInferedRoutes2<typeof authenticatedPaths>;
 
 export const AppRouterProvider = () => {
   const { isAuthenticated } = useContext(AuthContext);
