@@ -25,20 +25,20 @@ export type InferPath<T> = T extends RouteType
     ? `${T["path"]}${GetChildrenPaths<T["children"]>}`
     : never
 
-type GetInferedChildrenRoutes<T> = T extends { children?: infer ChildrenType }
-    ? ChildrenType extends ReadonlyArray<RouteType>
-    ? ChildrenType[number]
-    : never
-    : never;
 
 // Walkaround: remove double // from the string - should be enough for now
 type NormalizeStringSlashes<T extends string> = T extends `${infer First}//${infer Second}`
-? NormalizeStringSlashes<`${First}/${Second}`>
-: T
+    ? NormalizeStringSlashes<`${First}/${Second}`>
+    : T
 
 export type GetInferedRoutes<T, Path extends string = ""> = T extends RouteType
     ? {
         name: T["name"],
         path: NormalizeStringSlashes<`${Path}/${InferPath<T>}`>
-    } | GetInferedRoutes<GetInferedChildrenRoutes<T>, InferPath<T>> : never
+    } | GetInferedRoutes<
+        T["children"] extends ReadonlyArray<infer Children>
+        ? Children
+        : never, InferPath<T>
+    >
+    : never
 
