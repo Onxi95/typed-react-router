@@ -67,10 +67,7 @@ const resultType = inferPath(authenticatedRoutes);
 
 type GetChildrenNames<T> = T extends { children?: infer ChildrenType }
   ? ChildrenType extends ReadonlyArray<RouteType>
-    ? // wip: add support to recursively nested instances:
-      // ? ChildrenType[number]["name"] | GetChildrenNames<T>
-      // TS Error: Type instantiation is excessively deep and possibly infinite.ts(2589)
-      ChildrenType[number]["name"]
+    ? ChildrenType[number]["name"] | GetChildrenNames<[number]>
     : never
   : never;
 
@@ -110,7 +107,7 @@ function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
 
 const authenticatedRouter = createTypedBrowserRouter(authenticatedRoutes);
 
-console.log(authenticatedRouter.buildUrl("home"));
+console.log(authenticatedRouter.buildUrl("nestedRoute"));
 
 const anonymousRouter = createTypedBrowserRouter([
   {
