@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { GetRouteNames, RouteType } from "./types";
+import { GetRouteNames,  InferPath,  RouteType } from "./types";
 
 export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   routerConfig: T
@@ -22,7 +22,8 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   const flattenedRoutes = parseNestedRoutes(routerConfig);
 
   const buildUrl = (urlName: GetRouteNames<T[number]>) => {
-    return flattenedRoutes[urlName];
+    const t = flattenedRoutes[urlName] as unknown as InferPath<T[number]>;
+    return t;
   };
 
   return {

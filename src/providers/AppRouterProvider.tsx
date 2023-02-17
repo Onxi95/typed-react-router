@@ -5,8 +5,9 @@ import { LoginPage } from "../pages/LoginPage";
 import { SubroutePage } from "../pages/SubroutePage";
 import { AuthContext } from "./AuthProvider";
 import { createTypedBrowserRouter } from "./typedRouter";
+import { GetInferedRoute } from "./types";
 
-const authenticatedRouter = createTypedBrowserRouter([
+const authenticatedPaths = [
   {
     name: "home",
     path: "/:id",
@@ -29,7 +30,9 @@ const authenticatedRouter = createTypedBrowserRouter([
     path: "/",
     element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
   },
-] as const);
+] as const;
+
+const authenticatedRouter = createTypedBrowserRouter(authenticatedPaths);
 
 const anonymousRouter = createTypedBrowserRouter([
   {
@@ -43,6 +46,11 @@ const anonymousRouter = createTypedBrowserRouter([
     element: <Navigate to="/login" />,
   },
 ] as const);
+
+const result = authenticatedRouter.buildUrl("subRoute");
+console.log(result);
+
+type test1 = GetInferedRoute<typeof authenticatedPaths[number]>;
 
 export const AppRouterProvider = () => {
   const { isAuthenticated } = useContext(AuthContext);
