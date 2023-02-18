@@ -47,13 +47,15 @@ const anonymousRouter = createTypedBrowserRouter([
   },
 ] as const);
 
-const result = authenticatedRouter.buildUrl("home");
-console.log(result.path === "/:id");
+const result = authenticatedRouter.buildUrl("subRoute");
+console.log(result, "result");
 
-type test1 = GetInferedRoutes<typeof authenticatedPaths[number]> & {"name": "home"};
+type test1 = GetInferedRoutes<typeof authenticatedPaths[number]> & {
+  name: "home";
+};
 type test2 = GetInferedRoutes2<typeof authenticatedPaths>;
 
-const t: test1 = {name: "home", path: "/:id"};
+const t: test1 = { name: "home", path: "/:id" };
 
 export const AppRouterProvider = () => {
   const { isAuthenticated } = useContext(AuthContext);

@@ -35,7 +35,7 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
     parentPath = ""
   ) => {
     return routerConfig.reduce((acc, current) => {
-      const routeName = current.name as keyof ParsedNestedHash; 
+      const routeName = current.name as keyof ParsedNestedHash;
       const rootPath = parentPath ? `${parentPath}/` : "";
       acc[routeName] = `${rootPath}${current.path}` as ParsedNestedHash[keyof ParsedNestedHash];
       if (current.children) {
@@ -51,9 +51,7 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
 
 
   const buildUrl = <U extends keyof ParsedNestedHash>(urlName: U) => {
-    const result = flattenedRoutes[urlName] as GetInferedRoutes<T[number]> & { name: U };
-
-    return result; 
+    return flattenedRoutes[urlName];
   };
 
   return {
