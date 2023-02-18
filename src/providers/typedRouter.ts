@@ -27,7 +27,8 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
 ) {
   type ParsedNestedHash = {
     [K in GetInferedRoutes<T[number]>["name"]]: Extract<GetInferedRoutes<T[number]>, { name: K }>["path"]
-}
+  }
+
 
   const parseNestedRoutes = (
     routerConfig: ReadonlyArray<RouteType>,
@@ -49,8 +50,10 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   console.log(flattenedRoutes, "flattenedRoutes");
 
 
-  const buildUrl = (urlName: keyof ParsedNestedHash) => {
-    return flattenedRoutes[urlName];
+  const buildUrl = <U extends keyof ParsedNestedHash>(urlName: U) => {
+    const result = flattenedRoutes[urlName] as GetInferedRoutes<T[number]> & { name: U };
+
+    return result; 
   };
 
   return {

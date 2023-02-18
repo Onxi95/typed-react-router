@@ -47,8 +47,8 @@ const anonymousRouter = createTypedBrowserRouter([
   },
 ] as const);
 
-const result = authenticatedRouter.buildUrl("nestedRoute");
-console.log(result);
+const result = authenticatedRouter.buildUrl("home");
+console.log(result.path === "/:id");
 
 type test1 = GetInferedRoutes<typeof authenticatedPaths[number]> & {"name": "home"};
 type test2 = GetInferedRoutes2<typeof authenticatedPaths>;
