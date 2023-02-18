@@ -50,8 +50,10 @@ const anonymousRouter = createTypedBrowserRouter([
 const result = authenticatedRouter.buildUrl("nestedRoute");
 console.log(result);
 
-type test1 = GetInferedRoutes<typeof authenticatedPaths[number]>;
+type test1 = GetInferedRoutes<typeof authenticatedPaths[number]> & {"name": "home"};
 type test2 = GetInferedRoutes2<typeof authenticatedPaths>;
+
+const t: test1 = {name: "home", path: "/:id"};
 
 export const AppRouterProvider = () => {
   const { isAuthenticated } = useContext(AuthContext);
