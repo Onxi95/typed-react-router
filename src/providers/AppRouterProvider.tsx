@@ -47,7 +47,7 @@ const anonymousRouter = createTypedBrowserRouter([
   },
 ] as const);
 
-const result = authenticatedRouter.buildUrl("subRoute");
+const result = authenticatedRouter.buildUrl("home", { id: "1" });
 console.log(result, "result");
 
 type test1 = GetInferedRoutes<typeof authenticatedPaths[number]> & {
