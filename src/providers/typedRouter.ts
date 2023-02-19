@@ -28,7 +28,7 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   const flattenedRoutes = parseNestedRoutes(routerConfig);
   console.log(flattenedRoutes, "flattenedRoutes");
 
-  const buildUrl: BuildUrl<ParsedNestedHash> = (urlName, ...[params]) => {
+  const buildUrl: BuildUrl<ParsedNestedHash> = (...[urlName, ...params]) => {
     console.log(`"${urlName}" params: `, params);
     return flattenedRoutes[urlName];
   };
