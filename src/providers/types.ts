@@ -42,9 +42,8 @@ export type GetInferedRoutes<T, Path extends string = ""> = T extends RouteType
     >
     : never
 
-type ExtractPathParams<Path extends string> = string extends Path
-    ? void
-    : Path extends `/${infer _}:${infer Param}/${infer Rest}`
+type ExtractPathParams<Path extends string> =
+    Path extends `/${infer _}:${infer Param}/${infer Rest}`
     ? {
         [K in Param]: string;
     } & ExtractPathParams<`/${Rest}`>
@@ -52,19 +51,12 @@ type ExtractPathParams<Path extends string> = string extends Path
     ? {
         [K in Param]: string;
     }
-    : void;
+    : object;
 
 
-type InferParams<T> = T extends { path: string }
-    ? void extends ExtractPathParams<T["path"]>
-    ? null
-    : ExtractPathParams<T["path"]>
-    : undefined;
-
-
-export type BuildUrl<RouteHash> = <
+export type BuildUrl<RouteHash extends Record<string, string>> = <
     RouteName extends keyof RouteHash,
-    Params extends InferParams<RouteHash[RouteName]>
+    Params extends ExtractPathParams<RouteHash[RouteName]>
 >
     (...params: Params extends null
         ? [RouteName]
