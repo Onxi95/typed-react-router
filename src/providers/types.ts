@@ -55,10 +55,10 @@ type ExtractPathParams<Path extends string> = string extends Path
     : void;
 
 
-type InferParams<T> = T extends string
-    ? void extends ExtractPathParams<T>
+type InferParams<T> = T extends { path: string }
+    ? void extends ExtractPathParams<T["path"]>
     ? null
-    : ExtractPathParams<T>
+    : ExtractPathParams<T["path"]>
     : undefined;
 
 
@@ -69,4 +69,4 @@ export type BuildUrl<RouteHash> = <
     (...params: Params extends null
         ? [RouteName]
         : [RouteName, { params: Params }])
-    => RouteHash[RouteName];
+    => string;
