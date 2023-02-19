@@ -1,4 +1,5 @@
-import { Link as MuiLink, Typography } from "@mui/material";
+import { authenticatedRouter } from "@/providers/AppRouterProvider";
+import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { Link, Outlet, useParams, useSearchParams } from "react-router-dom";
 import { AppLayout } from "../layouts/AppLayout";
@@ -26,12 +27,20 @@ export const HomePage: React.FC = () => {
         </Box>
         <ul>
           <li>
-            <Link to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff">
+            <Link
+              to={authenticatedRouter.buildUrl("home", {
+                params: {
+                  id: "7bd3a823-e6dd-4ea2-9612-f6defe315cff",
+                },
+              })}
+            >
               root (/7bd3a823-e6dd-4ea2-9612-f6defe315cff)
             </Link>
           </li>
           <li>
-            <Link to="subroute/graphics">subroute (subroute/graphics)</Link>
+            <Link to={authenticatedRouter.buildUrl("subRoute", {
+              params: {id: "1", category: "graphics"}
+            })}>subroute (subroute/graphics)</Link>
           </li>
           <li>
             <Link to="subroute/graphics?order=15">
