@@ -1,16 +1,11 @@
 import { authenticatedRouter } from "@/providers/AppRouterProvider";
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link, Outlet, useParams, useSearchParams } from "react-router-dom";
+import { Link, Outlet, useSearchParams } from "react-router-dom";
 import { AppLayout } from "../layouts/AppLayout";
 
-type RouteParams = {
-  id: string;
-  category: string;
-};
-
 export const HomePage: React.FC = () => {
-  const { id, category } = useParams<RouteParams>();
+  const { id, category } = authenticatedRouter.useRouteParams("subRoute");
   const [searchParams, setSearchParams] = useSearchParams();
   return (
     <AppLayout>
@@ -38,9 +33,13 @@ export const HomePage: React.FC = () => {
             </Link>
           </li>
           <li>
-            <Link to={authenticatedRouter.buildUrl("subRoute", {
-              params: {id: "1", category: "graphics"}
-            })}>subroute (subroute/graphics)</Link>
+            <Link
+              to={authenticatedRouter.buildUrl("subRoute", {
+                params: { id: "1", category: "graphics" },
+              })}
+            >
+              subroute (subroute/graphics)
+            </Link>
           </li>
           <li>
             <Link to="subroute/graphics?order=15">

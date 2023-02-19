@@ -1,6 +1,6 @@
 import { compile } from "path-to-regexp";
-import { createBrowserRouter } from "react-router-dom";
-import { BuildUrl, GetInferedRoutes, RouteType } from "./types";
+import { createBrowserRouter, useParams } from "react-router-dom";
+import { BuildUrl, ExtractPathParams, GetInferedRoutes, RouteType } from "./types";
 
 
 export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
@@ -29,9 +29,13 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   const flattenedRoutes = parseNestedRoutes(routerConfig);
   console.log(flattenedRoutes, "flattenedRoutes");
 
-  const buildUrl: BuildUrl<ParsedNestedHash> = (...[urlName, {params}]) => {
-    console.log(`"${urlName}" params: `, params);
-    return compile(flattenedRoutes[urlName], { encode: encodeURIComponent })(params);
+  const buildUrl: BuildUrl<ParsedNestedHash> = (...[routeName, { params }]) => {
+    console.log(`"${routeName}" params: `, params);
+    return compile(flattenedRoutes[routeName], { encode: encodeURIComponent })(params);
+  };
+
+  const useRouteParams = <U extends keyof ParsedNestedHash>(_: U) => {
+    return useParams<ExtractPathParams<ParsedNestedHash[U]>>();
   };
 
   return {
@@ -39,5 +43,6 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     router: createBrowserRouter(routerConfig as any),
     buildUrl,
+    useRouteParams,
   };
 }

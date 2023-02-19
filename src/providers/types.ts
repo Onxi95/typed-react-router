@@ -42,7 +42,7 @@ export type GetInferedRoutes<T, Path extends string = ""> = T extends RouteType
     >
     : never
 
-type ExtractPathParams<Path extends string> =
+export type ExtractPathParams<Path extends string> =
     Path extends `/${infer _}:${infer Param}/${infer Rest}`
     ? {
         [K in Param]: string;
@@ -51,7 +51,7 @@ type ExtractPathParams<Path extends string> =
     ? {
         [K in Param]: string;
     }
-    : object;
+    : Record<string, string | undefined>;
 
 
 export type BuildUrl<RouteHash extends Record<string, string>> = <
