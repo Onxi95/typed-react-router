@@ -49,8 +49,10 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
 
   console.log(flattenedRoutes, "flattenedRoutes");
 
+  type BuildUrl<RouteHash> = <RouteName extends keyof RouteHash, Params extends InferParams<RouteHash[RouteName]>>(...params: Params extends null ? [RouteName] : [RouteName, {params: Params}]) => string;
 
-  const buildUrl = <U extends keyof ParsedNestedHash>(urlName: U, params: InferParams<ParsedNestedHash[U]>) => {
+  const buildUrl: BuildUrl<ParsedNestedHash> =(urlName, ...[params]) => {
+    console.log(`"${urlName}" params: `, params);
     return flattenedRoutes[urlName];
   };
 
