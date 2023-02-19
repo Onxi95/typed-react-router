@@ -42,11 +42,31 @@ export type GetInferedRoutes<T, Path extends string = ""> = T extends RouteType
     >
     : never
 
+type ExtractPathParams<Path extends string> = string extends Path
+    ? void
+    : Path extends `/${infer _}:${infer Param}/${infer Rest}`
+    ? {
+        [K in Param]: string;
+    } & ExtractPathParams<`/${Rest}`>
+    : Path extends `/${infer _}:${infer Param}`
+    ? {
+        [K in Param]: string;
+    }
+    : void;
 
-type ArrayToObject<T extends ReadonlyArray<RouteType>> = {
-    [K in T[number]["name"]]: Extract<T[number], { name: K }>["path"]
-};
 
-export type GetInferedRoutes2<T extends ReadonlyArray<RouteType>> =
-    ArrayToObject<T>
+type InferParams<T> = T extends string
+    ? void extends ExtractPathParams<T>
+    ? null
+    : ExtractPathParams<T>
+    : undefined;
 
+
+export type BuildUrl<RouteHash> = <
+    RouteName extends keyof RouteHash,
+    Params extends InferParams<RouteHash[RouteName]>
+>
+    (...params: Params extends null
+        ? [RouteName]
+        : [RouteName, { params: Params }])
+    => RouteHash[RouteName];

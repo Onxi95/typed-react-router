@@ -5,7 +5,7 @@ import { LoginPage } from "../pages/LoginPage";
 import { SubroutePage } from "../pages/SubroutePage";
 import { AuthContext } from "./AuthProvider";
 import { createTypedBrowserRouter } from "./typedRouter";
-import { GetInferedRoutes, GetInferedRoutes2 } from "./types";
+import { GetInferedRoutes } from "./types";
 
 const authenticatedPaths = [
   {
@@ -53,7 +53,6 @@ console.log(result, "result");
 type test1 = GetInferedRoutes<typeof authenticatedPaths[number]> & {
   name: "home";
 };
-type test2 = GetInferedRoutes2<typeof authenticatedPaths>;
 
 const t: test1 = { name: "home", path: "/:id" };
 

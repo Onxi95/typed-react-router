@@ -1,26 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import { GetInferedRoutes, RouteType } from "./types";
+import { BuildUrl, GetInferedRoutes, RouteType } from "./types";
 
-type ExtractPathParams<Path extends string> = string extends Path
-  ? void
-  : Path extends `/${infer _}:${infer Param}/${infer Rest}`
-  ? {
-    [K in Param]: string;
-  } & ExtractPathParams<`/${Rest}`>
-  : Path extends `/${infer _}:${infer Param}`
-  ? {
-    [K in Param]: string;
-  }
-  : void;
-
-
-type InferParams<T> = T extends string
-  ? void extends ExtractPathParams<T>
-  ? null
-  : ExtractPathParams<T>
-  : undefined;
-
-type test1 = InferParams<"/:id/subroute/:category">
 
 export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   routerConfig: T
@@ -46,12 +26,9 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
   };
 
   const flattenedRoutes = parseNestedRoutes(routerConfig);
-
   console.log(flattenedRoutes, "flattenedRoutes");
 
-  type BuildUrl<RouteHash> = <RouteName extends keyof RouteHash, Params extends InferParams<RouteHash[RouteName]>>(...params: Params extends null ? [RouteName] : [RouteName, {params: Params}]) => RouteHash[RouteName];
-
-  const buildUrl: BuildUrl<ParsedNestedHash> =(urlName, ...[params]) => {
+  const buildUrl: BuildUrl<ParsedNestedHash> = (urlName, ...[params]) => {
     console.log(`"${urlName}" params: `, params);
     return flattenedRoutes[urlName];
   };
