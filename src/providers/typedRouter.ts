@@ -32,6 +32,7 @@ export function createTypedBrowserRouter<T extends ReadonlyArray<RouteType>>(
     return compile(flattenedRoutes[routeName], { encode: encodeURIComponent })(params);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const useRouteParams = <U extends keyof ParsedNestedHash>(_: U) => {
     return useParams<ExtractPathParams<ParsedNestedHash[U]>>();
   };
