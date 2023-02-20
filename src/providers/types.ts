@@ -45,10 +45,12 @@ export type GetInferedRoutes<T, Path extends string = ""> = T extends RouteType
     : never
 
 export type ExtractPathParams<Path extends string> =
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Path extends `/${infer _}:${infer Param}/${infer Rest}`
     ? {
         [K in Param]: string;
     } & ExtractPathParams<`/${Rest}`>
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     : Path extends `/${infer _}:${infer Param}`
     ? {
         [K in Param]: string;
