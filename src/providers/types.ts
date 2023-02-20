@@ -1,4 +1,6 @@
-export type RouteType = {
+import { NonIndexRouteObject } from "react-router-dom";
+
+export type RouteType = Omit<NonIndexRouteObject, "children"> & {
     name: string;
     path: string;
     element: JSX.Element;

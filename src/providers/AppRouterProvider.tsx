@@ -6,11 +6,21 @@ import { SubroutePage } from "../pages/SubroutePage";
 import { AuthContext } from "./AuthProvider";
 import { createTypedBrowserRouter } from "./typedRouter";
 
+async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(() => {
+    return resolve("hello");
+  }, ms));
+}
+
 export const authenticatedRouter = createTypedBrowserRouter([
   {
     name: "home",
     path: "/:id",
     element: <HomePage />,
+    loader: async () => {
+      return sleep(3000);
+    },
+    fallbackElement: <div>Loading...</div>,
     children: [
       {
         name: "nestedRoute",
