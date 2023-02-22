@@ -11,7 +11,6 @@ export const authenticatedRouter = createTypedBrowserRouter([
     name: "home",
     path: "/:id",
     element: <HomePage />,
-    fallbackElement: <div>Loading...</div>,
     children: [
       {
         name: "nestedRoute",
