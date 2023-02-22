@@ -17,9 +17,6 @@ export const authenticatedRouter = createTypedBrowserRouter([
     name: "home",
     path: "/:id",
     element: <HomePage />,
-    loader: async () => {
-      return sleep(3000);
-    },
     fallbackElement: <div>Loading...</div>,
     children: [
       {
