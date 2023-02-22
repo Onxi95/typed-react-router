@@ -17,8 +17,6 @@ export type InferPath<T> = T extends RouteType
     ? `${T["path"]}${GetChildrenPaths<T["children"]>}`
     : never
 
-
-// Walkaround: remove double // from the string - should be enough for now
 type NormalizeStringSlashes<T extends string> = T extends `${infer First}//${infer Second}`
     ? NormalizeStringSlashes<`${First}/${Second}`>
     : T
