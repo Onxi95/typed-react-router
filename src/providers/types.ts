@@ -56,3 +56,7 @@ export type BuildUrl<RouteHash extends Record<string, string>> = <
         ? [RouteName]
         : [RouteName, { params: Params }])
     => string;
+
+export type RoutesHash<T extends ReadonlyArray<RouteType>> = {
+    [K in GetInferedRoutes<T[number]>["name"]]: Extract<GetInferedRoutes<T[number]>, { name: K }>["path"]
+}
