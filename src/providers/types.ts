@@ -7,16 +7,6 @@ export type RouteType = Omit<NonIndexRouteObject, "children"> & {
     children?: ReadonlyArray<RouteType>;
 };
 
-type GetChildrenNames<T> = T extends { children?: infer ChildrenType }
-    ? ChildrenType extends ReadonlyArray<RouteType>
-    ? ChildrenType[number]["name"] | GetChildrenNames<[number]>
-    : never
-    : never;
-
-export type GetRouteNames<T> = T extends RouteType
-    ? T["name"] | GetChildrenNames<T>
-    : never;
-
 type GetChildrenPaths<T> = T extends { children?: infer ChildrenType }
     ? ChildrenType extends ReadonlyArray<RouteType>
     ? ChildrenType[number]["path"] | GetChildrenPaths<[number]>
