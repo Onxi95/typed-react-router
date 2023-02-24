@@ -1,5 +1,5 @@
 import { compile } from "path-to-regexp";
-import { createBrowserRouter, useParams, useSearchParams as useQueryParams } from "react-router-dom";
+import { createBrowserRouter, useParams, useSearchParams } from "react-router-dom";
 import { BuildUrl, ExtractPathParams, RoutesHash, RouteType } from "./types";
 
 
@@ -36,8 +36,8 @@ export function createTypedBrowserRouter<RouterConfig extends ReadonlyArray<Rout
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const useSearchParams = <RouteName extends keyof RoutesHash<RouterConfig>>(_: RouteName) => {
-    const [searchParams, setSearchParams] = useQueryParams();
+  const useQueryParams = <RouteName extends keyof RoutesHash<RouterConfig>>(_: RouteName) => {
+    const [searchParams, setSearchParams] = useSearchParams();
 
     return { searchParams, setSearchParams };
   };
