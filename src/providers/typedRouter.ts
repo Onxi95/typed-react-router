@@ -1,22 +1,25 @@
 import { compile } from "path-to-regexp";
-import { createBrowserRouter, useParams, useSearchParams } from "react-router-dom";
+import {
+  createBrowserRouter,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { BuildUrl, ExtractPathParams, RoutesHash, RouteType } from "./types";
 
-
-export function createTypedBrowserRouter<RouterConfig extends ReadonlyArray<RouteType>>(
-  routerConfig: RouterConfig
-) {
-
+export function createTypedBrowserRouter<
+  RouterConfig extends ReadonlyArray<RouteType>
+>(routerConfig: RouterConfig) {
   const parseNestedRoutes = (
     routerConfig: ReadonlyArray<RouteType>,
     parentPath = ""
   ) => {
     return routerConfig.reduce((acc, current) => {
-      type RouteName = keyof RoutesHash<RouterConfig>
+      type RouteName = keyof RoutesHash<RouterConfig>;
 
       const routeName = current.name as RouteName;
       const rootPath = parentPath ? `${parentPath}/` : "";
-      acc[routeName] = `${rootPath}${current.path}` as RoutesHash<RouterConfig>[RouteName];
+      acc[routeName] =
+        `${rootPath}${current.path}` as RoutesHash<RouterConfig>[RouteName];
       if (current.children) {
         acc = { ...acc, ...parseNestedRoutes(current.children, current.path) };
       }
@@ -26,20 +29,41 @@ export function createTypedBrowserRouter<RouterConfig extends ReadonlyArray<Rout
 
   const flattenedRoutes = parseNestedRoutes(routerConfig);
 
-  const buildUrl: BuildUrl<RoutesHash<RouterConfig>> = (...[routeName, { params }]) => {
-    return compile(flattenedRoutes[routeName], { encode: encodeURIComponent })(params);
+  const buildUrl: BuildUrl<RoutesHash<RouterConfig>> = (
+    ...[routeName, { params }]
+  ) => {
+    return compile(flattenedRoutes[routeName], { encode: encodeURIComponent })(
+      params
+    );
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const useRouteParams = <RouteName extends keyof RoutesHash<RouterConfig>>(_: RouteName) => {
+  const useRouteParams = <RouteName extends keyof RoutesHash<RouterConfig>>(
+    _: RouteName
+  ) => {
     return useParams<ExtractPathParams<RoutesHash<RouterConfig>[RouteName]>>();
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const useQueryParams = <RouteName extends keyof RoutesHash<RouterConfig>>(_: RouteName) => {
+  const useQueryParams = <
+    RouteName extends keyof RoutesHash<RouterConfig>,
+    SearchParams extends RouteNameToSearchParams<RouteName>
+  >(
+    _: RouteName
+  ) => {
+    type URLSearchParams<RouteName> = {
+      // TODO: inject param type and return it
+      get<SearchParamName extends keyof SearchParams>(
+        paramName: string
+      ): SearchParams[SearchParamName];
+    };
+
     const [searchParams, setSearchParams] = useSearchParams();
 
-    return { searchParams, setSearchParams };
+    return [searchParams, setSearchParams] as [
+      URLSearchParams<RouteName>,
+      ReturnType<typeof useSearchParams>[1]
+    ];
   };
 
   return {
@@ -48,6 +72,7 @@ export function createTypedBrowserRouter<RouterConfig extends ReadonlyArray<Rout
     router: createBrowserRouter(routerConfig as any),
     buildUrl,
     useRouteParams,
-    useSearchParams
+    useSearchParams,
+    useQueryParams,
   };
 }

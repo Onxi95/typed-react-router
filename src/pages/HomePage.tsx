@@ -6,7 +6,11 @@ import { AppLayout } from "../layouts/AppLayout";
 
 export const HomePage: React.FC = () => {
   const { id, category } = authenticatedRouter.useRouteParams("subRoute");
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = authenticatedRouter.useQueryParams("subRoute");
+
+
+  type T = typeof searchParams;
+
   return (
     <AppLayout>
       <Typography variant="h4" component="h1" textAlign="center" marginTop={5}>
