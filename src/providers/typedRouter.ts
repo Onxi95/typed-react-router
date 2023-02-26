@@ -4,6 +4,7 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
+import { stringify } from "qs";
 import { BuildUrl, ExtractPathParams, RoutesHash, RouteType } from "./types";
 
 export function createTypedBrowserRouter<
@@ -34,12 +35,20 @@ export function createTypedBrowserRouter<
 
   const flattenedRoutes = parseNestedRoutes(routerConfig);
 
+  const hasQueryParams = (config: unknown): config is { query: Record<string, string> } => {
+    // eslint-disable-next-line no-prototype-builtins
+    return Boolean(config?.hasOwnProperty("query"));
+  };
+
   const buildUrl: BuildUrl<RoutesHash<RouterConfig>> = (
-    ...[routeName, { params }]
+    ...[routeName, urlConfig]
   ) => {
-    return compile(flattenedRoutes[routeName]["path"], { encode: encodeURIComponent })(
-      params
+    const compiledPath = compile(flattenedRoutes[routeName]["path"], { encode: encodeURIComponent })(
+      urlConfig?.params
     );
+    const queryParams = hasQueryParams(urlConfig) ? urlConfig.query : null;
+
+    return `${compiledPath}${queryParams ? `?${stringify(queryParams, { arrayFormat: "comma" })}` : ""}`;
   };
 
   const useRouteParams = <RouteName extends keyof RoutesHash<RouterConfig>>(
@@ -63,9 +72,7 @@ export function createTypedBrowserRouter<
       ): string;
     };
 
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    return [searchParams, setSearchParams] as [
+    return useSearchParams() as [
       URLSearchParams<RouteName>,
       ReturnType<typeof useSearchParams>[1]
     ];

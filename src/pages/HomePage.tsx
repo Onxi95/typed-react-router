@@ -6,11 +6,8 @@ import { AppLayout } from "../layouts/AppLayout";
 
 export const HomePage: React.FC = () => {
   const { id, category } = authenticatedRouter.useRouteParams("subRoute");
-  const [searchParams, setSearchParams] = authenticatedRouter.useQueryParams("subRoute");
-
-
-  type T = typeof searchParams;
-  searchParams.get("query2");
+  const [searchParams, setSearchParams] =
+    authenticatedRouter.useQueryParams("subRoute");
 
   return (
     <AppLayout>
@@ -22,7 +19,7 @@ export const HomePage: React.FC = () => {
           <Typography variant="body1">id: {id}</Typography>
           <Typography variant="body1">category: {category}</Typography>
           <Typography variant="body1">
-              order: {searchParams.get("query2")}
+            order: {searchParams.get("query2")}
           </Typography>
         </Box>
         <ul>
@@ -41,6 +38,7 @@ export const HomePage: React.FC = () => {
             <Link
               to={authenticatedRouter.buildUrl("subRoute", {
                 params: { id: "1", category: "graphics" },
+                query: { query1: "query1", query2: "query2" },
               })}
             >
               subroute (subroute/graphics)

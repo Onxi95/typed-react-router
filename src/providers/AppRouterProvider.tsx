@@ -23,7 +23,7 @@ const authenticatedRoutes = [
         name: "subRoute",
         path: "subroute/:category",
         element: <SubroutePage />,
-        queryParams: ["query2"]
+        queryParams: ["query2"],
       },
     ],
   },
@@ -38,7 +38,16 @@ export const authenticatedRouter =
   createTypedBrowserRouter(authenticatedRoutes);
 
 type test1 = GetInferedRoutes<typeof authenticatedRoutes[number]>;
-const [routeParams, setSearchParams] = authenticatedRouter.useQueryParams("subRoute");
+const builder = authenticatedRouter.buildUrl("subRoute", {
+  params: {
+    category: "1",
+    id: "1",
+  },
+  query: {
+    query1: "1",
+    query2: "2"
+  }
+});
 
 export const anonymousRouter = createTypedBrowserRouter([
   {
