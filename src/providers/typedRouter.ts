@@ -42,17 +42,17 @@ export function createTypedBrowserRouter<
     );
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const useRouteParams = <RouteName extends keyof RoutesHash<RouterConfig>>(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _: RouteName
   ) => {
     return useParams<ExtractPathParams<RoutesHash<RouterConfig>[RouteName]["path"]>>();
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const useQueryParams = <
     RouteName extends keyof RoutesHash<RouterConfig>,
   >(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
       _: RouteName
     ) => {
     type URLSearchParams<R extends RouteName> = {
@@ -65,7 +65,7 @@ export function createTypedBrowserRouter<
 
     const [searchParams, setSearchParams] = useSearchParams();
 
-    return [searchParams, setSearchParams] as unknown as [
+    return [searchParams, setSearchParams] as [
       URLSearchParams<RouteName>,
       ReturnType<typeof useSearchParams>[1]
     ];
