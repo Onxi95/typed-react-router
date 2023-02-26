@@ -40,6 +40,9 @@ export const HomePage: React.FC = () => {
                 params: {
                   id: "1",
                 },
+                query: {
+                  query1: "123"
+                }
               })}
             >
               nested route (/1)
@@ -49,7 +52,10 @@ export const HomePage: React.FC = () => {
             <Link
               to={authenticatedRouter.buildUrl("subRoute", {
                 params: { id: "1", category: "graphics" },
-                query: { query1: "1", query2: "2" },
+                query: {
+                  query1: "1",
+                  query2: "123"
+                }
               })}
             >
               subroute (subroute/graphics)

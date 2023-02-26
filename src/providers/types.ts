@@ -26,9 +26,8 @@ export type GetInferedRoutes<T, Path extends string = "", QueryParams extends Re
     ? {
         name: T["name"],
         path: NormalizeStringSlashes<`${Path}/${InferPath<T>}`>
-        queryParams: T["queryParams"] extends ReadonlyArray<string>
-        ? [...T["queryParams"], ...QueryParams]
-        : undefined
+        queryParams: [...(T["queryParams"] extends ReadonlyArray<string>
+            ? T["queryParams"] : []), ...QueryParams]
     } | GetInferedRoutes<
         T["children"] extends ReadonlyArray<infer Children>
         ? Children
@@ -51,7 +50,7 @@ export type ExtractPathParams<Path extends string> =
     : Record<string, string>;
 
 export type GetQueryParamsFromHash<T> = T extends ReadonlyArray<string>
-    ? { [K in T[number]]: string }
+    ? { [K in T[number]]?: string }
     : null;
 
 export type BuildUrl<RouteHash extends Record<string, { path: string, queryParams: ReadonlyArray<string> | undefined }>> = <
