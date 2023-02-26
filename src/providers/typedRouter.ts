@@ -35,20 +35,14 @@ export function createTypedBrowserRouter<
 
   const flattenedRoutes = parseNestedRoutes(routerConfig);
 
-  const hasQueryParams = (config: unknown): config is { query: Record<string, string> } => {
-    // eslint-disable-next-line no-prototype-builtins
-    return Boolean(config?.hasOwnProperty("query"));
-  };
-
   const buildUrl: BuildUrl<RoutesHash<RouterConfig>> = (
     ...[routeName, urlConfig]
   ) => {
     const compiledPath = compile(flattenedRoutes[routeName]["path"], { encode: encodeURIComponent })(
       urlConfig?.params
     );
-    const queryParams = hasQueryParams(urlConfig) ? urlConfig.query : null;
 
-    return `${compiledPath}${queryParams ? `?${stringify(queryParams, { arrayFormat: "comma" })}` : ""}`;
+    return `${compiledPath}${urlConfig.query ? `?${stringify(urlConfig.query, { arrayFormat: "comma" })}` : ""}`;
   };
 
   const useRouteParams = <RouteName extends keyof RoutesHash<RouterConfig>>(
