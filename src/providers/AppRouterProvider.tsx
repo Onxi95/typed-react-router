@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext } from "react";
 import { Navigate, RouterProvider } from "react-router-dom";
 import { HomePage } from "../pages/HomePage";
