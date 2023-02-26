@@ -18,8 +18,7 @@ export function createTypedBrowserRouter<
 
       const routeName = current.name as RouteName;
       const rootPath = parentPath ? `${parentPath}/` : "";
-      acc[routeName] =
-        `${rootPath}${current.path}` as RoutesHash<RouterConfig>[RouteName];
+      acc[routeName] = { path: `${rootPath}${current.path}` as RoutesHash<RouterConfig>[RouteName]["path"] };
       if (current.children) {
         acc = { ...acc, ...parseNestedRoutes(current.children, current.path) };
       }
@@ -32,7 +31,7 @@ export function createTypedBrowserRouter<
   const buildUrl: BuildUrl<RoutesHash<RouterConfig>> = (
     ...[routeName, { params }]
   ) => {
-    return compile(flattenedRoutes[routeName], { encode: encodeURIComponent })(
+    return compile(flattenedRoutes[routeName]["path"], { encode: encodeURIComponent })(
       params
     );
   };
@@ -41,7 +40,7 @@ export function createTypedBrowserRouter<
   const useRouteParams = <RouteName extends keyof RoutesHash<RouterConfig>>(
     _: RouteName
   ) => {
-    return useParams<ExtractPathParams<RoutesHash<RouterConfig>[RouteName]>>();
+    return useParams<ExtractPathParams<RoutesHash<RouterConfig>[RouteName]["path"]>>();
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
