@@ -74,6 +74,8 @@ export const anonymousRouter = createTypedBrowserRouter([
   },
 ] as const);
 
+anonymousRouter.buildUrl("login");
+
 export const AppRouterProvider = () => {
   const { isAuthenticated } = useContext(AuthContext);
   return (

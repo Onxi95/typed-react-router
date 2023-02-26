@@ -29,6 +29,9 @@ export const HomePage: React.FC = () => {
                 params: {
                   id: "1",
                 },
+                query: {
+                  query1: "1"
+                }
               })}
             >
               root (/1)
@@ -36,12 +39,14 @@ export const HomePage: React.FC = () => {
           </li>
           <li>
             <Link
-              to={authenticatedRouter.buildUrl("nestedRoute", {
+              to={authenticatedRouter.buildUrl("subRoute", {
                 params: {
                   id: "1",
+                  category: "abc"
                 },
                 query: {
-                  query1: "123"
+                  query1: "1",
+                  query2: "2"
                 }
               })}
             >
@@ -54,7 +59,7 @@ export const HomePage: React.FC = () => {
                 params: { id: "1", category: "graphics" },
                 query: {
                   query1: "1",
-                  query2: "123"
+                  query2: "2"
                 }
               })}
             >

@@ -49,7 +49,10 @@ export function createTypedBrowserRouter<
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _: RouteName
   ) => {
-    return useParams<ExtractPathParams<RoutesHash<RouterConfig>[RouteName]["path"]>>();
+    type Params = ExtractPathParams<RoutesHash<RouterConfig>[RouteName]["path"]> extends Record<string, string>
+      ? ExtractPathParams<RoutesHash<RouterConfig>[RouteName]["path"]>
+      : Record<string, string>
+    return useParams<Params>();
   };
 
   const useQueryParams = <
