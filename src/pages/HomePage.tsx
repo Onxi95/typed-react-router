@@ -1,7 +1,7 @@
 import { authenticatedRouter } from "@/providers/AppRouterProvider";
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { Link, Outlet, useSearchParams } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { AppLayout } from "../layouts/AppLayout";
 
 export const HomePage: React.FC = () => {
@@ -10,6 +10,7 @@ export const HomePage: React.FC = () => {
 
 
   type T = typeof searchParams;
+  searchParams.get("query2");
 
   return (
     <AppLayout>
@@ -21,7 +22,7 @@ export const HomePage: React.FC = () => {
           <Typography variant="body1">id: {id}</Typography>
           <Typography variant="body1">category: {category}</Typography>
           <Typography variant="body1">
-              order: {searchParams.get("subRoute")}
+              order: {searchParams.get("query2")}
           </Typography>
         </Box>
         <ul>

@@ -38,6 +38,7 @@ export const authenticatedRouter =
   createTypedBrowserRouter(authenticatedRoutes);
 
 type test1 = GetInferedRoutes<typeof authenticatedRoutes[number]>;
+const [routeParams, setSearchParams] = authenticatedRouter.useQueryParams("subRoute");
 
 export const anonymousRouter = createTypedBrowserRouter([
   {
