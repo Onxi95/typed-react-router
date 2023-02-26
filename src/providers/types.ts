@@ -57,14 +57,14 @@ export type GetQueryParamsFromHash<T> = T extends ReadonlyArray<string>
 export type BuildUrl<RouteHash extends Record<string, { path: string, queryParams: ReadonlyArray<string> | undefined }>> = <
     RouteName extends keyof RouteHash,
     Params extends ExtractPathParams<RouteHash[RouteName]["path"]>,
-    Query extends RouteHash[RouteName]["queryParams"]
+    Query extends GetQueryParamsFromHash<RouteHash[RouteName]["queryParams"]>
 >
     (...params:
         [
             RouteName,
             {
                 // query: Query extends ReadonlyArray<string> ? { [K in Query[number]]: string } : never;
-                query?: GetQueryParamsFromHash<Query>
+                query?: Query;
                 params: Params;
             }
         ])
