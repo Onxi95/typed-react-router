@@ -4,6 +4,7 @@ export type RouteType = Omit<NonIndexRouteObject, "children"> & {
     name: string;
     path: string;
     element: JSX.Element;
+    queryParams?: ReadonlyArray<string>,
     children?: ReadonlyArray<RouteType>;
 };
 
@@ -21,14 +22,18 @@ type NormalizeStringSlashes<T extends string> = T extends `${infer First}//${inf
     ? NormalizeStringSlashes<`${First}/${Second}`>
     : T
 
-export type GetInferedRoutes<T, Path extends string = ""> = T extends RouteType
+export type GetInferedRoutes<T, Path extends string = "", QueryParams extends ReadonlyArray<string> = []> = T extends RouteType
     ? {
         name: T["name"],
         path: NormalizeStringSlashes<`${Path}/${InferPath<T>}`>
+        queryParams: T["queryParams"] extends ReadonlyArray<string>
+        ? [...T["queryParams"], ...QueryParams]
+        : undefined
     } | GetInferedRoutes<
         T["children"] extends ReadonlyArray<infer Children>
         ? Children
-        : never, InferPath<T>
+        : never, InferPath<T>,
+        T["queryParams"] extends ReadonlyArray<string> ? T["queryParams"] : []
     >
     : never
 

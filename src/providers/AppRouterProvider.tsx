@@ -12,6 +12,7 @@ const authenticatedRoutes = [
     name: "home",
     path: "/:id",
     element: <HomePage />,
+    queryParams: ["query1"],
     children: [
       {
         name: "nestedRoute",
@@ -22,6 +23,7 @@ const authenticatedRoutes = [
         name: "subRoute",
         path: "subroute/:category",
         element: <SubroutePage />,
+        queryParams: ["query2"]
       },
     ],
   },
