@@ -21,7 +21,7 @@ export const HomePage: React.FC = () => {
           <Typography variant="body1">id: {id}</Typography>
           <Typography variant="body1">category: {category}</Typography>
           <Typography variant="body1">
-            order: {searchParams.get("order")}
+              order: {searchParams.get("subRoute")}
           </Typography>
         </Box>
         <ul>
