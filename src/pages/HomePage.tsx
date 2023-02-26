@@ -27,26 +27,41 @@ export const HomePage: React.FC = () => {
             <Link
               to={authenticatedRouter.buildUrl("home", {
                 params: {
-                  id: "7bd3a823-e6dd-4ea2-9612-f6defe315cff",
+                  id: "1",
                 },
               })}
             >
-              root (/7bd3a823-e6dd-4ea2-9612-f6defe315cff)
+              root (/1)
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={authenticatedRouter.buildUrl("nestedRoute", {
+                params: {
+                  id: "1",
+                },
+              })}
+            >
+              nested route (/1)
             </Link>
           </li>
           <li>
             <Link
               to={authenticatedRouter.buildUrl("subRoute", {
                 params: { id: "1", category: "graphics" },
-                query: { query1: "query1", query2: "query2" },
+                query: { query1: "1", query2: "2" },
               })}
             >
               subroute (subroute/graphics)
             </Link>
           </li>
           <li>
-            <Link to="subroute/graphics?order=15">
-              subroute (subroute/graphics?order=15)
+            <Link
+              to={authenticatedRouter.buildUrl("homeWithoutQueryParam", {
+                params: { id: "1" },
+              })}
+            >
+              homeWithoutQueryParam (/1)
             </Link>
           </li>
         </ul>

@@ -64,16 +64,16 @@ export function createTypedBrowserRouter<
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
       _: RouteName
     ) => {
-    type URLSearchParams<R extends RouteName> = {
+    type URLSearchParams = {
       get(
-        paramName: RoutesHash<RouterConfig>[R]["queryParams"] extends ReadonlyArray<string>
-          ? RoutesHash<RouterConfig>[R]["queryParams"][number]
+        paramName: RoutesHash<RouterConfig>[RouteName]["queryParams"] extends ReadonlyArray<string>
+          ? RoutesHash<RouterConfig>[RouteName]["queryParams"][number]
           : null
       ): string;
     };
 
     return useSearchParams() as [
-      URLSearchParams<RouteName>,
+      URLSearchParams,
       ReturnType<typeof useSearchParams>[1]
     ];
   };

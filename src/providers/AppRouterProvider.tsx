@@ -5,7 +5,13 @@ import { LoginPage } from "../pages/LoginPage";
 import { SubroutePage } from "../pages/SubroutePage";
 import { AuthContext } from "./AuthProvider";
 import { createTypedBrowserRouter } from "./typedRouter";
-import { GetInferedRoutes, RouteType } from "./types";
+import {
+  BuildUrl,
+  GetInferedRoutes,
+  GetQueryParamsFromHash,
+  RoutesHash,
+  RouteType,
+} from "./types";
 
 const authenticatedRoutes = [
   {
@@ -32,21 +38,27 @@ const authenticatedRoutes = [
     path: "/",
     element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
   },
+  {
+    name: "homeWithoutQueryParam",
+    path: "/:id",
+    element: <HomePage />,
+  },
 ] as const satisfies ReadonlyArray<RouteType>;
+
+const test123 = authenticatedRoutes[0].children[1].queryParams;
 
 export const authenticatedRouter =
   createTypedBrowserRouter(authenticatedRoutes);
 
 type test1 = GetInferedRoutes<typeof authenticatedRoutes[number]>;
-const builder = authenticatedRouter.buildUrl("subRoute", {
+type test2 = RoutesHash<typeof authenticatedRoutes>;
+type test3 = GetQueryParamsFromHash<typeof test123>;
+type test4 = BuildUrl<test2>;
+const test = authenticatedRouter.buildUrl;
+const builder = authenticatedRouter.buildUrl("homeWithoutQueryParam", {
   params: {
-    category: "1",
     id: "1",
   },
-  query: {
-    query1: "1",
-    query2: "2"
-  }
 });
 
 export const anonymousRouter = createTypedBrowserRouter([
