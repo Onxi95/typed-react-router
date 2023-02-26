@@ -48,6 +48,6 @@ export function createTypedBrowserRouter<RouterConfig extends ReadonlyArray<Rout
     router: createBrowserRouter(routerConfig as any),
     buildUrl,
     useRouteParams,
-    useSearchParams
+    useQueryParams,
   };
 }

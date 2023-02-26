@@ -43,7 +43,7 @@ export type ExtractPathParams<Path extends string> =
     ? {
         [K in Param]: string;
     }
-    : Record<string, string | undefined>;
+    : Record<string, string>;
 
 
 export type BuildUrl<RouteHash extends Record<string, string>> = <
