@@ -5,8 +5,9 @@ import { LoginPage } from "../pages/LoginPage";
 import { SubroutePage } from "../pages/SubroutePage";
 import { AuthContext } from "./AuthProvider";
 import { createTypedBrowserRouter } from "./typedRouter";
+import { GetInferedRoutes, RouteType } from "./types";
 
-export const authenticatedRouter = createTypedBrowserRouter([
+const authenticatedRoutes = [
   {
     name: "home",
     path: "/:id",
@@ -29,7 +30,12 @@ export const authenticatedRouter = createTypedBrowserRouter([
     path: "/",
     element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
   },
-] as const);
+] as const satisfies ReadonlyArray<RouteType>;
+
+export const authenticatedRouter =
+  createTypedBrowserRouter(authenticatedRoutes);
+
+type test1 = GetInferedRoutes<typeof authenticatedRoutes[number]>;
 
 export const anonymousRouter = createTypedBrowserRouter([
   {
