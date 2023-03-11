@@ -6,10 +6,8 @@ import { AppLayout } from "../layouts/AppLayout";
 
 export const HomePage: React.FC = () => {
   const { id, category } = authenticatedRouter.useRouteParams("subRoute");
-  const [searchParams, setSearchParams] = authenticatedRouter.useQueryParams("subRoute");
+  const [searchParams] = authenticatedRouter.useQueryParams("subRoute");
 
-
-  type T = typeof searchParams;
   console.log(searchParams.get("query2"), "query2");
 
   return (
