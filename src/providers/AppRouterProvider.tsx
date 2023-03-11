@@ -108,17 +108,17 @@ type BuildUrlTest<
   Query extends RouteHash[RouteName]["queryParams"]
 >(
   ...params: Query | Params extends null
-      ? [RouteName]
-      : Query extends null
-      ? [RouteName, { params: Params }]
-      : Params extends null
-      ? [RouteName, { query: Query }]
-      : [
-          RouteName,
-          {
-              query: Query;
-              params: Params;
-          }
+    ? [RouteName]
+    : Query extends null
+    ? [RouteName, { params: Params }]
+    : Params extends null
+    ? [RouteName, { query: Query }]
+    : [
+        RouteName,
+        {
+          query: Query;
+          params: Params;
+        }
       ]
 ) => string;
 
@@ -126,10 +126,8 @@ type test16 = BuildUrlTest<test13>;
 const test17: test16 = (route) => "hi";
 const test18 = test17("home", {
   params: "/:id/subroute/:category",
-  query: []
+  query: [],
 });
-
-
 
 type BuildUrlTest2<
   RouteHash extends Record<
@@ -138,21 +136,22 @@ type BuildUrlTest2<
   >
 > = <
   RouteName extends keyof RouteHash,
+  Route extends RouteHash[RouteName]
   // Params extends RouteHash[RouteName]["path"],
   // Query extends RouteHash[RouteName]["queryParams"]
 >(
-  ...params: RouteHash[RouteName]["path"] | RouteHash[RouteName]["queryParams"] extends null
-      ? [RouteName]
-      : RouteHash[RouteName]["queryParams"] extends null
-      ? [RouteName, { params: RouteHash[RouteName]["path"] }]
-      : RouteHash[RouteName]["path"] extends null
-      ? [RouteName, { query: RouteHash[RouteName]["queryParams"] }]
-      : [
-          RouteName,
-          {
-              query: RouteHash[RouteName]["queryParams"];
-              params: RouteHash[RouteName]["path"];
-          }
+  ...params: Route["path"] | Route["queryParams"] extends null
+    ? [RouteName]
+    : Route["queryParams"] extends null
+    ? [RouteName, { params: Route["path"] }]
+    : Route["path"] extends null
+    ? [RouteName, { query: Route["queryParams"] }]
+    : [
+        RouteName,
+        {
+          query: Route["queryParams"];
+          params: Route["path"];
+        }
       ]
 ) => string;
 
@@ -160,11 +159,11 @@ type test19 = BuildUrlTest2<test13>;
 const test20: test19 = (route) => "hello";
 const test21 = test20("home", {
   params: "/:id",
-  query: ["hello"]
+  query: ["hello"],
 });
 const test22 = test20("subRoute", {
   params: "/:id/subroute/:category",
-  query: []
+  query: [],
 });
 
 export const anonymousRouter = createTypedBrowserRouter([
