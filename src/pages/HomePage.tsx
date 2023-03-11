@@ -31,6 +31,9 @@ export const HomePage: React.FC = () => {
                 params: {
                   id: "7bd3a823-e6dd-4ea2-9612-f6defe315cff",
                 },
+                query: {
+                  hello: "hi"
+                }
               })}
             >
               root (/7bd3a823-e6dd-4ea2-9612-f6defe315cff)
