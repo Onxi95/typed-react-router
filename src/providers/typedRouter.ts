@@ -41,7 +41,7 @@ export function createTypedBrowserRouter<
     return compile(flattenedRoutes[routeName].path, { encode: encodeURIComponent })(
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
-      params.params
+      params?.params
     );
   };
 
