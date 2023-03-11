@@ -35,18 +35,6 @@ export type GetInferedRoutes<T, Path extends string = "", ParentQueryParams exte
     : never
 
 
-export type GetInferedQueryParams<T, ParentQueryParams extends readonly string[] = []> = T extends RouteType
-    ? {
-        name: T["name"],
-        queryParams: T["queryParams"] extends readonly string[] ? [...T["queryParams"], ...ParentQueryParams] : []
-    } | GetInferedQueryParams<
-        T["children"] extends ReadonlyArray<infer Children>
-        ? Children
-        : []
-        , T["queryParams"] extends readonly string[] ? T["queryParams"] : []>
-    : never
-
-
 export type ExtractPathParams<Path extends string> = string extends Path
     ? void
     : Path extends `/${infer _}:${infer Param}/${infer Rest}`
@@ -65,26 +53,30 @@ export type InferParams<T> = T extends { path: string }
     : ExtractPathParams<T["path"]>
     : null;
 
-type ExtractQueryParams = null;
+export type InferQueries<T> = T extends { queryParams?: infer QueryParams }
+    ? QueryParams extends readonly string[]
+    ? QueryParams["length"] extends 0
+    ? null
+    : { [K in QueryParams[number]]?: string }
+    : null
+    : null;
 
-export type InferQuery<T> = T extends { queryParams?: infer QueryParams } ? QueryParams : null;
-
-export type BuildUrl<RouteHash> = <
-    RouteName extends keyof RouteHash,
-    Params extends InferParams<RouteHash[RouteName]>,
-    Query extends null
->(
-    ...params: Query | Params extends null
+export type BuildUrl<RouteHash extends Record<
+    string,
+    { path: string; queryParams?: ReadonlyArray<string> }
+>
+> = <RouteName extends keyof RouteHash, Route extends RouteHash[RouteName]>(
+    ...params: InferParams<Route> | InferQueries<Route> extends null
         ? [RouteName]
-        : Query extends null
-        ? [RouteName, { params: Params }]
-        : Params extends null
-        ? [RouteName, { query: Query }]
+        : InferQueries<Route> extends null
+        ? [RouteName, { params: InferParams<Route> }]
+        : InferQueries<Route> extends null
+        ? [RouteName, { query: InferQueries<Route> }]
         : [
             RouteName,
             {
-                query: Query;
-                params: Params;
+                query: InferQueries<Route>;
+                params: InferParams<Route>;
             }
         ]
 ) => string;
