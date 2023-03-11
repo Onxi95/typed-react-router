@@ -20,9 +20,10 @@ export function createTypedBrowserRouter<
       const routeName = current.name as RouteName;
       const rootPath = parentPath ? `${parentPath}/` : "";
       acc[routeName] = {
-        path: `${rootPath}${current.path}` as RoutesHash<RouterConfig>[RouteName]["path"],
-        queryParams: [...parentQueryParams, ...(current.queryParams ? current.queryParams : [])] as RoutesHash<RouterConfig>[RouteName]["queryParams"]
-      };
+        name: routeName,
+        path: `${rootPath}${current.path}`,
+        queryParams: [...parentQueryParams, ...(current.queryParams ? current.queryParams : [])]
+      } as RoutesHash<RouterConfig>[RouteName];
       if (current.children) {
         acc = { ...acc, ...parseNestedRoutes(current.children, current.path, current.queryParams) };
       }

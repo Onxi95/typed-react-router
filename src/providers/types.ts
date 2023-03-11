@@ -22,14 +22,15 @@ type NormalizeStringSlashes<T extends string> = T extends `${infer First}//${inf
     ? NormalizeStringSlashes<`${First}/${Second}`>
     : T
 
-export type GetInferedRoutes<T, Path extends string = ""> = T extends RouteType
+export type GetInferedRoutes<T, Path extends string = "", ParentQueryParams extends readonly string[] = []> = T extends RouteType
     ? {
         name: T["name"],
         path: NormalizeStringSlashes<`${Path}/${InferPath<T>}`>
+        queryParams: T["queryParams"] extends readonly string[] ? [...T["queryParams"], ...ParentQueryParams] : []
     } | GetInferedRoutes<
         T["children"] extends ReadonlyArray<infer Children>
         ? Children
-        : never, InferPath<T>
+        : never, InferPath<T>, T["queryParams"] extends readonly string[] ? T["queryParams"] : []
     >
     : never
 
@@ -46,7 +47,6 @@ export type GetInferedQueryParams<T, ParentQueryParams extends readonly string[]
     : never
 
 
-    
 export type ExtractPathParams<Path extends string> = string extends Path
     ? void
     : Path extends `/${infer _}:${infer Param}/${infer Rest}`
@@ -67,12 +67,12 @@ export type InferParams<T> = T extends { path: string }
 
 type ExtractQueryParams = null;
 
-export type InferQuery<T> = null;
+export type InferQuery<T> = T extends { queryParams?: infer QueryParams } ? QueryParams : null;
 
 export type BuildUrl<RouteHash> = <
     RouteName extends keyof RouteHash,
     Params extends InferParams<RouteHash[RouteName]>,
-    Query extends InferQuery<RouteHash[RouteName]>
+    Query extends null
 >(
     ...params: Query | Params extends null
         ? [RouteName]
@@ -90,8 +90,5 @@ export type BuildUrl<RouteHash> = <
 ) => string;
 
 export type RoutesHash<T extends ReadonlyArray<RouteType>> = {
-    [K in GetInferedRoutes<T[number]>["name"]]: {
-        path: Extract<GetInferedRoutes<T[number]>, { name: K }>["path"]
-        queryParams: Extract<GetInferedQueryParams<T[number]>, { name: K }>
-    }
+    [K in GetInferedRoutes<T[number]>["name"]]: Extract<GetInferedRoutes<T[number]>, { name: K }>
 }

@@ -80,6 +80,9 @@ type test9 = InferParams<typeof authenticatedRoutes["0"]>
 type test10 = InferQuery<typeof authenticatedRoutes["0"]>
 type test11 = test9 | test10;
 type test12 = null extends test11 ? true : false
+type test13 = RoutesHash<typeof authenticatedRoutes>
+type test14 = InferParams<test13["subRoute"]>
+type test15 = test13;
 
 export const anonymousRouter = createTypedBrowserRouter([
   {
