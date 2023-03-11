@@ -13,7 +13,7 @@ export function createTypedBrowserRouter<
   const parseNestedRoutes = (
     routerConfig: ReadonlyArray<RouteType>,
     parentPath = "",
-    parentQueryParams: ReadonlyArray<string> = [],
+    parentQueryParams: readonly string[] = [],
   ) => {
     return routerConfig.reduce((acc, current) => {
       type RouteName = keyof RoutesHash<RouterConfig>;
@@ -21,11 +21,10 @@ export function createTypedBrowserRouter<
       const routeName = current.name as RouteName;
       const rootPath = parentPath ? `${parentPath}/` : "";
       acc[routeName] = {
-        path: `${rootPath}${current.path}` as RoutesHash<RouterConfig>[RouteName]["path"],
-        // TODO: remove any
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        queryParams: [...parentQueryParams, ...(current.queryParams ? current.queryParams : [])] as any,
-      };
+        name: routeName,
+        path: `${rootPath}${current.path}`,
+        queryParams: [...parentQueryParams, ...(current.queryParams ? current.queryParams : [])]
+      } as RoutesHash<RouterConfig>[RouteName];
       if (current.children) {
         acc = { ...acc, ...parseNestedRoutes(current.children, current.path, current.queryParams) };
       }
@@ -34,38 +33,44 @@ export function createTypedBrowserRouter<
   };
 
   const flattenedRoutes = parseNestedRoutes(routerConfig);
+  console.log(flattenedRoutes);
 
   const buildUrl: BuildUrl<RoutesHash<RouterConfig>> = (
-    ...[routeName, urlConfig]
+    ...[routeName, config]
   ) => {
-    const compiledPath = compile(flattenedRoutes[routeName]["path"], { encode: encodeURIComponent })(
-      urlConfig?.params
+
+    const routeParams = (config && "params" in config) ? config.params || {} : {};
+    const queryParams = (config && "query" in config) && config.query;
+
+    const pathWithRouteParams = compile(flattenedRoutes[routeName].path, { encode: encodeURIComponent })(
+      routeParams
     );
 
-    return `${compiledPath}${urlConfig.query ? `?${stringify(urlConfig.query, { arrayFormat: "comma" })}` : ""}`;
+    const pathWithFullParams = `${pathWithRouteParams}${queryParams ? `?${stringify(queryParams, { arrayFormat: "comma" })}` : ""}`;
+
+    return pathWithFullParams;
   };
 
   const useRouteParams = <RouteName extends keyof RoutesHash<RouterConfig>>(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _: RouteName
   ) => {
-    type Params = ExtractPathParams<RoutesHash<RouterConfig>[RouteName]["path"]> extends Record<string, string>
-      ? ExtractPathParams<RoutesHash<RouterConfig>[RouteName]["path"]>
-      : Record<string, string>
-    return useParams<Params>();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    return useParams<ExtractPathParams<RoutesHash<RouterConfig>[RouteName]["path"]>>();
   };
 
   const useQueryParams = <
     RouteName extends keyof RoutesHash<RouterConfig>,
+    SearchParams extends RoutesHash<RouterConfig>[RouteName]["queryParams"],
+    SearchParam extends SearchParams[number]
   >(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
       _: RouteName
     ) => {
     type URLSearchParams = {
       get(
-        paramName: RoutesHash<RouterConfig>[RouteName]["queryParams"] extends ReadonlyArray<string>
-          ? RoutesHash<RouterConfig>[RouteName]["queryParams"][number]
-          : null
+        paramName: SearchParam
       ): string;
     };
 

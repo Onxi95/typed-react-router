@@ -22,55 +22,65 @@ type NormalizeStringSlashes<T extends string> = T extends `${infer First}//${inf
     ? NormalizeStringSlashes<`${First}/${Second}`>
     : T
 
-export type GetInferedRoutes<T, Path extends string = "", QueryParams extends ReadonlyArray<string> = []> = T extends RouteType
+export type GetInferedRoutes<T, Path extends string = "", ParentQueryParams extends readonly string[] = []> = T extends RouteType
     ? {
         name: T["name"],
         path: NormalizeStringSlashes<`${Path}/${InferPath<T>}`>
-        queryParams: [...(T["queryParams"] extends ReadonlyArray<string>
-            ? T["queryParams"] : []), ...QueryParams]
+        queryParams: T["queryParams"] extends readonly string[] ? [...T["queryParams"], ...ParentQueryParams] : []
     } | GetInferedRoutes<
         T["children"] extends ReadonlyArray<infer Children>
         ? Children
-        : never, InferPath<T>,
-        T["queryParams"] extends ReadonlyArray<string> ? T["queryParams"] : []
+        : never, InferPath<T>, T["queryParams"] extends readonly string[] ? T["queryParams"] : []
     >
     : never
 
-export type ExtractPathParams<Path extends string> =
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    Path extends `/${infer _}:${infer Param}/${infer Rest}`
+
+export type ExtractPathParams<Path extends string> = string extends Path
+    ? void
+    : Path extends `/${infer _}:${infer Param}/${infer Rest}`
     ? {
         [K in Param]: string;
     } & ExtractPathParams<`/${Rest}`>
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     : Path extends `/${infer _}:${infer Param}`
     ? {
         [K in Param]: string;
     }
-    : null;
+    : void;
 
-export type GetQueryParamsFromHash<T> = T extends ReadonlyArray<string>
-    ? T["length"] extends 0
+export type InferParams<T> = T extends { path: string }
+    ? void extends ExtractPathParams<T["path"]>
     ? null
-    : { [K in T[number]]?: string }
+    : ExtractPathParams<T["path"]>
     : null;
 
-export type BuildUrl<RouteHash extends Record<string, { path: string, queryParams: ReadonlyArray<string> | undefined }>> = <
-    RouteName extends keyof RouteHash,
-    Params extends ExtractPathParams<RouteHash[RouteName]["path"]>,
-    Query extends GetQueryParamsFromHash<RouteHash[RouteName]["queryParams"]>
+export type InferQueries<T> = T extends { queryParams?: infer QueryParams }
+    ? QueryParams extends readonly string[]
+    ? QueryParams["length"] extends 0
+    ? null
+    : { [K in QueryParams[number]]?: string }
+    : null
+    : null;
+
+export type BuildUrl<RouteHash extends Record<
+    string,
+    { path: string; queryParams?: ReadonlyArray<string> }
 >
-    (...params:
-        Params | Query extends null
+> = <RouteName extends keyof RouteHash, Route extends RouteHash[RouteName]>(
+    ...params: InferParams<Route> | InferQueries<Route> extends null
         ? [RouteName]
-        : Query extends null
-        ? [RouteName, { params: Params }]
-        : [RouteName, { params: Params, query?: Query }])
-    => string;
+        : InferQueries<Route> extends null
+        ? [RouteName, { params: InferParams<Route> }]
+        : InferQueries<Route> extends null
+        ? [RouteName, { query: InferQueries<Route> }]
+        : [
+            RouteName,
+            {
+                query: InferQueries<Route>;
+                params: InferParams<Route>;
+            }
+        ]
+) => string;
 
 export type RoutesHash<T extends ReadonlyArray<RouteType>> = {
-    [K in GetInferedRoutes<T[number]>["name"]]: {
-        path: Extract<GetInferedRoutes<T[number]>, { name: K }>["path"]
-        queryParams: Extract<GetInferedRoutes<T[number]>, { name: K }>["queryParams"]
-    }
+    [K in GetInferedRoutes<T[number]>["name"]]: Extract<GetInferedRoutes<T[number]>, { name: K }>
 }

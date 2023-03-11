@@ -7,10 +7,6 @@ import { SubroutePage } from "../pages/SubroutePage";
 import { AuthContext } from "./AuthProvider";
 import { createTypedBrowserRouter } from "./typedRouter";
 import {
-  BuildUrl,
-  GetInferedRoutes,
-  GetQueryParamsFromHash,
-  RoutesHash,
   RouteType,
 } from "./types";
 
@@ -19,11 +15,12 @@ const authenticatedRoutes = [
     name: "home",
     path: "/:id",
     element: <HomePage />,
-    queryParams: ["query1"],
+    queryParams: ["hello"],
     children: [
       {
         name: "nestedRoute",
         path: "",
+        queryParams: ["hi"],
         element: <div>Hello nested route</div>,
       },
       {
@@ -51,15 +48,24 @@ const test123 = authenticatedRoutes[0].children[1].queryParams;
 export const authenticatedRouter =
   createTypedBrowserRouter(authenticatedRoutes);
 
-type test1 = GetInferedRoutes<typeof authenticatedRoutes[number]>;
-type test2 = RoutesHash<typeof authenticatedRoutes>;
-type test3 = GetQueryParamsFromHash<typeof test123>;
-type test4 = BuildUrl<test2>;
-const test = authenticatedRouter.buildUrl;
-const builder = authenticatedRouter.buildUrl("homeWithoutQueryParam", {
+authenticatedRouter.buildUrl("home", {
+  params: {
+    id: "1"
+  },
+  query: {
+    hello: "hi"
+  }
+});
+
+authenticatedRouter.buildUrl("subRoute", {
   params: {
     id: "1",
+    category: "category"
   },
+  query: {
+    hello: "hi",
+    query2: "query2"
+  }
 });
 
 export const anonymousRouter = createTypedBrowserRouter([
