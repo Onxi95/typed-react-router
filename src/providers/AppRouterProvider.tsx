@@ -129,27 +129,30 @@ const test18 = test17("home", {
   query: [],
 });
 
+type InferQueriesTest<T> = T extends { queryParams?: infer QueryParams }
+  ? QueryParams extends readonly string[]
+    ? QueryParams["length"] extends 0
+      ? null
+      : { [K in QueryParams[number]]?: string }
+    : null
+  : null;
+
 type BuildUrlTest2<
   RouteHash extends Record<
     string,
-    { path: string; queryParams: readonly string[] }
+    { path: string; queryParams?: ReadonlyArray<string> }
   >
-> = <
-  RouteName extends keyof RouteHash,
-  Route extends RouteHash[RouteName]
-  // Params extends RouteHash[RouteName]["path"],
-  // Query extends RouteHash[RouteName]["queryParams"]
->(
-  ...params: InferParams<Route> | Route["queryParams"] extends null
+> = <RouteName extends keyof RouteHash, Route extends RouteHash[RouteName]>(
+  ...params: InferParams<Route> | InferQueriesTest<Route> extends null
     ? [RouteName]
-    : Route["queryParams"] extends null
+    : InferQueriesTest<Route> extends null
     ? [RouteName, { params: InferParams<Route> }]
-    : InferParams<Route> extends null
-    ? [RouteName, { query: Route["queryParams"] }]
+    : InferQueriesTest<Route> extends null
+    ? [RouteName, { query: InferQueriesTest<Route> }]
     : [
         RouteName,
         {
-          query: Route["queryParams"];
+          query: InferQueriesTest<Route>;
           params: InferParams<Route>;
         }
       ]
@@ -159,16 +162,24 @@ type test19 = BuildUrlTest2<test13>;
 const test20: test19 = (...route) => "hello";
 const test21 = test20("home", {
   params: {
-    id: "1"
+    id: "1",
   },
-  query: ["hello"],
+  query: {
+    hello: "hi"
+  }
 });
 const test22 = test20("subRoute", {
   params: {
     id: "1",
-    category: "category"
+    category: "category",
   },
-  query: ["hi"],
+});
+
+const test23 = test20("subRoute", {
+  params :{
+    id: "123",
+    category: "cat1",
+  },
 });
 
 export const anonymousRouter = createTypedBrowserRouter([
