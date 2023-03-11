@@ -4,7 +4,7 @@ export type RouteType = Omit<NonIndexRouteObject, "children"> & {
     name: string;
     path: string;
     element: JSX.Element;
-    queryParams?: readonly string[];
+    queryParams?: ReadonlyArray<string>;
     children?: ReadonlyArray<RouteType>;
 };
 
