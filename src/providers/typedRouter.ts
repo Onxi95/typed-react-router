@@ -1,4 +1,5 @@
 import { compile } from "path-to-regexp";
+import { stringify } from "qs";
 import {
   createBrowserRouter,
   useParams,
@@ -35,15 +36,19 @@ export function createTypedBrowserRouter<
   console.log(flattenedRoutes);
 
   const buildUrl: BuildUrl<RoutesHash<RouterConfig>> = (
-    ...[routeName, params]
+    ...[routeName, config]
   ) => {
 
+    const routeParams = (config && "params" in config) ? config.params || {} : {};
+    const queryParams = (config && "query" in config) && config.query;
 
-    return compile(flattenedRoutes[routeName].path, { encode: encodeURIComponent })(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      params?.params
+    const pathWithRouteParams = compile(flattenedRoutes[routeName].path, { encode: encodeURIComponent })(
+      routeParams
     );
+
+    const pathWithFullParams = `${pathWithRouteParams}${queryParams ? `?${stringify(queryParams, { arrayFormat: "comma" })}` : ""}`;
+
+    return pathWithFullParams;
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
