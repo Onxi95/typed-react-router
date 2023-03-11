@@ -5,7 +5,11 @@ import { LoginPage } from "../pages/LoginPage";
 import { SubroutePage } from "../pages/SubroutePage";
 import { AuthContext } from "./AuthProvider";
 import { createTypedBrowserRouter } from "./typedRouter";
-import { GetInferedRoutes, RouteType } from "./types";
+import {
+  ExtractPathParams,
+  GetInferedRoutes,
+  RoutesHash,
+} from "./types";
 
 const authenticatedRoutes = [
   {
@@ -30,12 +34,22 @@ const authenticatedRoutes = [
     path: "/",
     element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
   },
-] as const satisfies ReadonlyArray<RouteType>;
+] as const;
 
 export const authenticatedRouter =
   createTypedBrowserRouter(authenticatedRoutes);
 
 type test1 = GetInferedRoutes<typeof authenticatedRoutes[number]>;
+type test2 = ExtractPathParams<
+  RoutesHash<typeof authenticatedRoutes>["subRoute"]
+>;
+
+const builder = authenticatedRouter.buildUrl("subRoute", {
+  params: {
+    id: "1",
+    category: "abc",
+  },
+});
 
 export const anonymousRouter = createTypedBrowserRouter([
   {

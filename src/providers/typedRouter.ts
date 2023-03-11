@@ -47,7 +47,8 @@ export function createTypedBrowserRouter<
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const useQueryParams = <
     RouteName extends keyof RoutesHash<RouterConfig>,
-    SearchParams extends RouteNameToSearchParams<RouteName>
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
+    SearchParams extends unknown
   >(
       _: RouteName
     ) => {
