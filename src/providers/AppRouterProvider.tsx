@@ -97,6 +97,38 @@ type InferQueryTest<T> = T extends { queryParams?: infer QueryParams }
 
 type test15 = InferQueryTest<test13["home"]>;
 
+type BuildUrlTest<
+  RouteHash extends Record<
+    string,
+    { path: string; queryParams: readonly string[] }
+  >
+> = <
+  RouteName extends keyof RouteHash,
+  Params extends RouteHash[RouteName]["path"],
+  Query extends RouteHash[RouteName]["queryParams"]
+>(
+  ...params: Query | Params extends null
+      ? [RouteName]
+      : Query extends null
+      ? [RouteName, { params: Params }]
+      : Params extends null
+      ? [RouteName, { query: Query }]
+      : [
+          RouteName,
+          {
+              query: Query;
+              params: Params;
+          }
+      ]
+) => string;
+
+type test16 = BuildUrlTest<test13>;
+const test17: test16 = (route) => "hi";
+const test18 = test17("home", {
+  params: "/:id/subroute/:category",
+  query: []
+});
+
 export const anonymousRouter = createTypedBrowserRouter([
   {
     name: "login",
