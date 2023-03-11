@@ -9,6 +9,7 @@ import {
   ExtractPathParams,
   GetInferedRoutes,
   RoutesHash,
+  RouteType,
 } from "./types";
 
 const authenticatedRoutes = [
@@ -16,6 +17,7 @@ const authenticatedRoutes = [
     name: "home",
     path: "/:id",
     element: <HomePage />,
+    queryParams: ["hello"],
     children: [
       {
         name: "nestedRoute",
@@ -34,7 +36,7 @@ const authenticatedRoutes = [
     path: "/",
     element: <Navigate to="/7bd3a823-e6dd-4ea2-9612-f6defe315cff" />,
   },
-] as const;
+] as const satisfies ReadonlyArray<RouteType>;
 
 export const authenticatedRouter =
   createTypedBrowserRouter(authenticatedRoutes);
