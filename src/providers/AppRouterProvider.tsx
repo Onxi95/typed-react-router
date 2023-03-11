@@ -50,7 +50,9 @@ type test2 = ExtractPathParams<
   RoutesHash<typeof authenticatedRoutes>["subRoute"]["path"]
 >;
 type test3 = GetInferedQueryParams<typeof authenticatedRoutes[number]>;
-type test4 = GetInferedQueryParams<typeof authenticatedRoutes["1"]>["queryParams"]
+type test4 = GetInferedQueryParams<
+  typeof authenticatedRoutes["1"]
+>["queryParams"];
 
 const homeBuilder = authenticatedRouter.buildUrl("home", {
   params: {
@@ -66,23 +68,34 @@ const nestedRouteBuilder = authenticatedRouter.buildUrl("nestedRoute", {
 const subRouteBuilder = authenticatedRouter.buildUrl("subRoute", {
   params: {
     id: "1",
-    category: "abc"
+    category: "abc",
   },
 });
 
-const passthroughBuilder = authenticatedRouter.buildUrl("authenticatedPassthrough");
+const passthroughBuilder = authenticatedRouter.buildUrl(
+  "authenticatedPassthrough"
+);
 
-type test5 = ExtractPathParams<typeof authenticatedRoutes["1"]["path"]>
-type test6 = ExtractPathParams<typeof authenticatedRoutes["0"]["children"]["0"]["path"]>
-type test7 = InferQuery<typeof authenticatedRoutes["1"]>
-type test8 = InferParams<typeof authenticatedRoutes["1"]>
-type test9 = InferParams<typeof authenticatedRoutes["0"]>
-type test10 = InferQuery<typeof authenticatedRoutes["0"]>
+type test5 = ExtractPathParams<typeof authenticatedRoutes["1"]["path"]>;
+type test6 = ExtractPathParams<
+  typeof authenticatedRoutes["0"]["children"]["0"]["path"]
+>;
+type test7 = InferQuery<typeof authenticatedRoutes["1"]>;
+type test8 = InferParams<typeof authenticatedRoutes["1"]>;
+type test9 = InferParams<typeof authenticatedRoutes["0"]>;
+type test10 = InferQuery<typeof authenticatedRoutes["0"]>;
 type test11 = test9 | test10;
-type test12 = null extends test11 ? true : false
-type test13 = RoutesHash<typeof authenticatedRoutes>
-type test14 = InferParams<test13["subRoute"]>
-type test15 = test13;
+type test12 = null extends test11 ? true : false;
+type test13 = RoutesHash<typeof authenticatedRoutes>;
+type test14 = InferParams<test13["subRoute"]>;
+
+type InferQueryTest<T> = T extends { queryParams?: infer QueryParams }
+  ? QueryParams extends readonly string[]
+    ? { [K in QueryParams[number]]: string }
+    : null
+  : null;
+
+type test15 = InferQueryTest<test13["home"]>;
 
 export const anonymousRouter = createTypedBrowserRouter([
   {
