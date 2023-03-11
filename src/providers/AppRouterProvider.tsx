@@ -7,7 +7,10 @@ import { AuthContext } from "./AuthProvider";
 import { createTypedBrowserRouter } from "./typedRouter";
 import {
   ExtractPathParams,
+  GetInferedQueryParams,
   GetInferedRoutes,
+  InferParams,
+  InferQuery,
   RoutesHash,
   RouteType,
 } from "./types";
@@ -22,6 +25,7 @@ const authenticatedRoutes = [
       {
         name: "nestedRoute",
         path: "",
+        queryParams: ["hi"],
         element: <div>Hello nested route</div>,
       },
       {
@@ -45,13 +49,37 @@ type test1 = GetInferedRoutes<typeof authenticatedRoutes[number]>;
 type test2 = ExtractPathParams<
   RoutesHash<typeof authenticatedRoutes>["subRoute"]["path"]
 >;
+type test3 = GetInferedQueryParams<typeof authenticatedRoutes[number]>;
+type test4 = GetInferedQueryParams<typeof authenticatedRoutes["1"]>["queryParams"]
 
-const builder = authenticatedRouter.buildUrl("subRoute", {
+const homeBuilder = authenticatedRouter.buildUrl("home", {
   params: {
     id: "1",
-    category: "2",
   },
 });
+
+const nestedRouteBuilder = authenticatedRouter.buildUrl("nestedRoute", {
+  params: {
+    id: "1",
+  },
+});
+const subRouteBuilder = authenticatedRouter.buildUrl("subRoute", {
+  params: {
+    id: "1",
+    category: "abc"
+  },
+});
+
+const passthroughBuilder = authenticatedRouter.buildUrl("authenticatedPassthrough");
+
+type test5 = ExtractPathParams<typeof authenticatedRoutes["1"]["path"]>
+type test6 = ExtractPathParams<typeof authenticatedRoutes["0"]["children"]["0"]["path"]>
+type test7 = InferQuery<typeof authenticatedRoutes["1"]>
+type test8 = InferParams<typeof authenticatedRoutes["1"]>
+type test9 = InferParams<typeof authenticatedRoutes["0"]>
+type test10 = InferQuery<typeof authenticatedRoutes["0"]>
+type test11 = test9 | test10;
+type test12 = null extends test11 ? true : false
 
 export const anonymousRouter = createTypedBrowserRouter([
   {

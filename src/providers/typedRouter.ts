@@ -11,28 +11,37 @@ export function createTypedBrowserRouter<
 >(routerConfig: RouterConfig) {
   const parseNestedRoutes = (
     routerConfig: ReadonlyArray<RouteType>,
-    parentPath = ""
+    parentPath = "",
+    parentQueryParams: readonly string[] = [],
   ) => {
     return routerConfig.reduce((acc, current) => {
       type RouteName = keyof RoutesHash<RouterConfig>;
 
       const routeName = current.name as RouteName;
       const rootPath = parentPath ? `${parentPath}/` : "";
-      acc[routeName] = { path: `${rootPath}${current.path}` as RoutesHash<RouterConfig>[RouteName]["path"] };
+      acc[routeName] = {
+        path: `${rootPath}${current.path}` as RoutesHash<RouterConfig>[RouteName]["path"],
+        queryParams: [...parentQueryParams, ...(current.queryParams ? current.queryParams : [])] as RoutesHash<RouterConfig>[RouteName]["queryParams"]
+      };
       if (current.children) {
-        acc = { ...acc, ...parseNestedRoutes(current.children, current.path) };
+        acc = { ...acc, ...parseNestedRoutes(current.children, current.path, current.queryParams) };
       }
       return acc;
     }, {} as RoutesHash<RouterConfig>);
   };
 
   const flattenedRoutes = parseNestedRoutes(routerConfig);
+  console.log(flattenedRoutes);
 
   const buildUrl: BuildUrl<RoutesHash<RouterConfig>> = (
-    ...[routeName, { params }]
+    ...[routeName, params]
   ) => {
+
+
     return compile(flattenedRoutes[routeName].path, { encode: encodeURIComponent })(
-      params
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      params.params
     );
   };
 
@@ -40,6 +49,8 @@ export function createTypedBrowserRouter<
   const useRouteParams = <RouteName extends keyof RoutesHash<RouterConfig>>(
     _: RouteName
   ) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     return useParams<ExtractPathParams<RoutesHash<RouterConfig>[RouteName]["path"]>>();
   };
 
