@@ -129,6 +129,44 @@ const test18 = test17("home", {
   query: []
 });
 
+
+
+type BuildUrlTest2<
+  RouteHash extends Record<
+    string,
+    { path: string; queryParams: readonly string[] }
+  >
+> = <
+  RouteName extends keyof RouteHash,
+  // Params extends RouteHash[RouteName]["path"],
+  // Query extends RouteHash[RouteName]["queryParams"]
+>(
+  ...params: RouteHash[RouteName]["path"] | RouteHash[RouteName]["queryParams"] extends null
+      ? [RouteName]
+      : RouteHash[RouteName]["queryParams"] extends null
+      ? [RouteName, { params: RouteHash[RouteName]["path"] }]
+      : RouteHash[RouteName]["path"] extends null
+      ? [RouteName, { query: RouteHash[RouteName]["queryParams"] }]
+      : [
+          RouteName,
+          {
+              query: RouteHash[RouteName]["queryParams"];
+              params: RouteHash[RouteName]["path"];
+          }
+      ]
+) => string;
+
+type test19 = BuildUrlTest2<test13>;
+const test20: test19 = (route) => "hello";
+const test21 = test20("home", {
+  params: "/:id",
+  query: ["hello"]
+});
+const test22 = test20("subRoute", {
+  params: "/:id/subroute/:category",
+  query: []
+});
+
 export const anonymousRouter = createTypedBrowserRouter([
   {
     name: "login",
