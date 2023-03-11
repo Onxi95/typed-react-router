@@ -31,8 +31,8 @@ export const HomePage: React.FC = () => {
                   id: "1",
                 },
                 query: {
-                  hello: "hi"
-                }
+                  hello: "hi",
+                },
               })}
             >
               root (/1)
@@ -43,11 +43,11 @@ export const HomePage: React.FC = () => {
               to={authenticatedRouter.buildUrl("subRoute", {
                 params: {
                   id: "1",
-                  category: "abc"
+                  category: "abc",
                 },
                 query: {
-                  hello: "hi"
-                }
+                  hello: "hi",
+                },
               })}
             >
               nested route (/1)
@@ -59,8 +59,8 @@ export const HomePage: React.FC = () => {
                 params: { id: "1", category: "graphics" },
                 query: {
                   hello: "hi",
-                  query2: "query2"
-                }
+                  query2: "query2",
+                },
               })}
             >
               subroute (subroute/graphics)

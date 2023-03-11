@@ -6,9 +6,7 @@ import { LoginPage } from "../pages/LoginPage";
 import { SubroutePage } from "../pages/SubroutePage";
 import { AuthContext } from "./AuthProvider";
 import { createTypedBrowserRouter } from "./typedRouter";
-import {
-  RouteType,
-} from "./types";
+import { RouteType } from "./types";
 
 const authenticatedRoutes = [
   {
@@ -50,22 +48,22 @@ export const authenticatedRouter =
 
 authenticatedRouter.buildUrl("home", {
   params: {
-    id: "1"
+    id: "1",
   },
   query: {
-    hello: "hi"
-  }
+    hello: "hi",
+  },
 });
 
 authenticatedRouter.buildUrl("subRoute", {
   params: {
     id: "1",
-    category: "category"
+    category: "category",
   },
   query: {
     hello: "hi",
-    query2: "query2"
-  }
+    query2: "query2",
+  },
 });
 
 export const anonymousRouter = createTypedBrowserRouter([
