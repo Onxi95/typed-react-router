@@ -47,9 +47,9 @@ export type ExtractPathParams<Path extends string> =
     : Record<string, string>;
 
 
-export type BuildUrl<RouteHash extends Record<string, string>> = <
+export type BuildUrl<RouteHash extends Record<string, Record<"path", string>>> = <
     RouteName extends keyof RouteHash,
-    Params extends ExtractPathParams<RouteHash[RouteName]>
+    Params extends ExtractPathParams<RouteHash[RouteName]["path"]>
 >
     (...params: Params extends null
         ? [RouteName]
@@ -57,5 +57,7 @@ export type BuildUrl<RouteHash extends Record<string, string>> = <
     => string;
 
 export type RoutesHash<T extends ReadonlyArray<RouteType>> = {
-    [K in GetInferedRoutes<T[number]>["name"]]: Extract<GetInferedRoutes<T[number]>, { name: K }>["path"]
+    [K in GetInferedRoutes<T[number]>["name"]]: {
+        path: Extract<GetInferedRoutes<T[number]>, { name: K }>["path"]
+    }
 }

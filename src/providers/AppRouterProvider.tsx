@@ -43,13 +43,13 @@ export const authenticatedRouter =
 
 type test1 = GetInferedRoutes<typeof authenticatedRoutes[number]>;
 type test2 = ExtractPathParams<
-  RoutesHash<typeof authenticatedRoutes>["subRoute"]
+  RoutesHash<typeof authenticatedRoutes>["subRoute"]["path"]
 >;
 
 const builder = authenticatedRouter.buildUrl("subRoute", {
   params: {
     id: "1",
-    category: "abc",
+    category: "2",
   },
 });
 
