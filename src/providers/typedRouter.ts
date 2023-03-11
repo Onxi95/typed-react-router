@@ -60,19 +60,17 @@ export function createTypedBrowserRouter<
     return useParams<ExtractPathParams<RoutesHash<RouterConfig>[RouteName]["path"]>>();
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const useQueryParams = <
     RouteName extends keyof RoutesHash<RouterConfig>,
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
-    SearchParams extends unknown
+    SearchParams extends RoutesHash<RouterConfig>[RouteName]["queryParams"],
+    SearchParam extends SearchParams[number]
   >(
       _: RouteName
     ) => {
     type URLSearchParams<RouteName> = {
-      // TODO: inject param type and return it
       get<SearchParamName extends keyof SearchParams>(
-        paramName: string
-      ): SearchParams[SearchParamName];
+        paramName: SearchParam
+      ): string;
     };
 
     const [searchParams, setSearchParams] = useSearchParams();
